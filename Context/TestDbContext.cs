@@ -32,14 +32,14 @@ namespace WebAplicacion.Context
             user.ToTable("User");
             user.HasKey(u => u.Id);
             user.Property(u => u.Name).HasColumnType("varchar(148)").IsRequired();
-            user.Property(u => u.LastName);
-            user.Property(u => u.Email);
+            user.Property(u => u.LastName).HasColumnType("varchar(100)");
+            user.Property(u => u.Email).HasColumnType("varchar(50)").IsRequired();
             user.Property(u => u.Password);
             user.Property(u => u.PhoneNumber);
             user.Property(u => u.UserName);
             user.Property(u => u.date);
             
-            //
+            
 
             var client = modelBuilder.Entity<Client>();
 
