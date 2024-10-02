@@ -9,7 +9,7 @@ namespace WebAplicacion.Context
         {
         }
         public DbSet<User> Users { get; set; }
-        public DbSet<Client> Clients { get; set; }
+        public DbSet<Comentari_Client> Clients { get; set; }
         public DbSet<Cities> Cities { get; set; }
         public DbSet<Buys> Shopping { get; set; }
         public DbSet<Inventory_purchase> purchasing_inventory { get; set; }
@@ -31,17 +31,17 @@ namespace WebAplicacion.Context
             //Nombre de a tabla / propiedades de los campos 
             user.ToTable("User");
             user.HasKey(u => u.Id);
-            user.Property(u => u.Name).HasColumnType("varchar(148)").IsRequired();
-            user.Property(u => u.LastName).HasColumnType("varchar(100)");
-            user.Property(u => u.Email).HasColumnType("varchar(50)").IsRequired();
-            user.Property(u => u.Password);
+            user.Property(u => u.Name).HasColumnType("varchar(128)").IsRequired();
+            user.Property(u => u.LastName).HasColumnType("varchar(128)").IsRequired();
+            user.Property(u => u.Email).HasColumnType("varchar(64)").IsRequired();
+            user.Property(u => u.Password).HasColumnType("varchar(15)").IsRequired();
             user.Property(u => u.PhoneNumber);
             user.Property(u => u.UserName);
             user.Property(u => u.date);
             
             
 
-            var client = modelBuilder.Entity<Client>();
+            var client = modelBuilder.Entity<Comentari_Client>();
 
             
             modelBuilder.Entity<Cities>().HasKey(u => u.Id);
