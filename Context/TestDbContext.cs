@@ -9,6 +9,7 @@ namespace WebAplicacion.Context
         {
         }
         public DbSet<User> Users { get; set; }
+        public DbSet<Client> clients { get; set; }
         public DbSet<Comentari_Client> Clients { get; set; }
         public DbSet<Cities> Cities { get; set; }
         public DbSet<Buys> Shopping { get; set; }
@@ -34,16 +35,28 @@ namespace WebAplicacion.Context
             user.Property(u => u.Name).HasColumnType("varchar(128)").IsRequired();
             user.Property(u => u.LastName).HasColumnType("varchar(128)").IsRequired();
             user.Property(u => u.Email).HasColumnType("varchar(64)").IsRequired();
-            user.Property(u => u.Password).HasColumnType("varchar(15)").IsRequired();
-            user.Property(u => u.PhoneNumber);
-            user.Property(u => u.UserName);
-            user.Property(u => u.date);
-            
-            
+            user.Property(u => u.Password).HasColumnType("varchar(16)").IsRequired();
+            user.Property(u => u.PhoneNumber).HasColumnType("varchar(16)").IsRequired();
+            user.Property(u => u.UserName).HasColumnType("varchar(32)").IsRequired();
+            user.Property(u => u.date).HasColumnType("Date").IsRequired();
+             
+          
 
-            var client = modelBuilder.Entity<Comentari_Client>();
+            var client = modelBuilder.Entity<Client>();
 
-            
+            client.ToTable("Client");
+            client.HasKey(u => u.Id);
+            client.Property(u => u.Name).HasColumnType("varchar (16)").IsRequired();
+            client.Property(u => u.Email).HasColumnType("varchar (256)").IsRequired();
+            client.Property(u => u.LastName).HasColumnType("varchar(64)");
+            client.Property(u => u.Phone).HasColumnType("varchar(16)").IsRequired();
+
+            var buys= modelBuilder.Entity<Buys>();
+
+            buys.ToTable("Buys");
+            buys.HasKey(u => u.Id);
+            buys.Property(u => u.supplier_Id).HasColumnType("int");
+
             modelBuilder.Entity<Cities>().HasKey(u => u.Id);
             modelBuilder.Entity<Buys>().HasKey(u => u.Id);
             modelBuilder.Entity<Inventory_purchase>().HasKey(u => u.Id);
