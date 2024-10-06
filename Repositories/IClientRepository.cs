@@ -1,6 +1,6 @@
 ﻿namespace WebAplicacion.Repositories
 {
-    public class IUserRepositories 
+    public interface IClientRepository
     {
     }
 }

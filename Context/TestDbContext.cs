@@ -232,6 +232,7 @@ namespace WebAplicacion.Context
 
 
             modelBuilder.Entity<Cities>().HasKey(u => u.Id);
+            modelBuilder.Entity<Client>().HasKey(u => u.Id);
             modelBuilder.Entity<Buys>().HasKey(u => u.Id);
             modelBuilder.Entity<Inventory_purchase>().HasKey(u => u.Id);
             modelBuilder.Entity<Employee>().HasKey(u => u.Id);
@@ -248,7 +249,8 @@ namespace WebAplicacion.Context
 
 
     public DbSet<User> Users { get; set; }
-    public DbSet<Comentari_Client> Clients { get; set; }
+        public DbSet<Client> Clients { get; set; }
+        public DbSet<Comentari_Client> Client { get; set; }
     public DbSet<Cities> Cities { get; set; }
     public DbSet<Buys> Shopping { get; set; }
     public DbSet<Inventory_purchase> purchasing_inventory { get; set; }
