@@ -1,14 +1,13 @@
 ﻿namespace WebAplicacion.Model
 {
+    // se creo la tabla client con sus respectivos campos
     public class Client
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public int Id { get; set; }
-        public string Client_Id { get; set; }
-        public string Order_Id { get; set; }
-        public string Comment { get; set; }
-        public string Qualification { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+        public string Address { get; set; }
+       
     }
 }
