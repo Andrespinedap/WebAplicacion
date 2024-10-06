@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAplicacion.Context;
 
@@ -11,9 +12,11 @@ using WebAplicacion.Context;
 namespace WebAplicacion.Migrations
 {
     [DbContext(typeof(TestDbContext))]
-    partial class TestDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241006062251_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,10 +49,7 @@ namespace WebAplicacion.Migrations
             modelBuilder.Entity("WebAplicacion.Model.Cities", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Client_Id")
                         .IsRequired()
@@ -69,9 +69,6 @@ namespace WebAplicacion.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Client_Id")
-                        .IsUnique();
-
-                    b.HasIndex("Vehicle_Id")
                         .IsUnique();
 
                     b.ToTable("Cities", (string)null);
@@ -558,15 +555,15 @@ namespace WebAplicacion.Migrations
 
             modelBuilder.Entity("WebAplicacion.Model.Cities", b =>
                 {
-                    b.HasOne("WebAplicacion.Model.Client", "Client")
+                    b.HasOne("WebAplicacion.Model.Vehicle", "Vehicle")
                         .WithOne("Cities")
                         .HasForeignKey("WebAplicacion.Model.Cities", "Client_Id")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("WebAplicacion.Model.Vehicle", "Vehicle")
+                    b.HasOne("WebAplicacion.Model.Client", "Client")
                         .WithOne("Cities")
-                        .HasForeignKey("WebAplicacion.Model.Cities", "Vehicle_Id")
+                        .HasForeignKey("WebAplicacion.Model.Cities", "Id")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 

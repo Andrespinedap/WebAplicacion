@@ -19,10 +19,10 @@ namespace WebAplicacion.Context
             // Nombre de la tabla / propiedades de los campos
             user.ToTable("User");
             user.HasKey(u => u.Id);
-            user.Property(u => u.Name).HasColumnType("varchar(148)").IsRequired();
-            user.Property(u => u.LastName).HasColumnType("varchar(148)").IsRequired();
-            user.Property(u => u.Email).HasColumnType("varchar(256)").IsRequired();
-            user.Property(u => u.Password).HasColumnType("varchar(256)").IsRequired();
+            user.Property(u => u.Name).HasColumnType("varchar(128)").IsRequired();
+            user.Property(u => u.LastName).HasColumnType("varchar(128)").IsRequired();
+            user.Property(u => u.Email).HasColumnType("varchar(255)").IsRequired();
+            user.Property(u => u.Password).HasColumnType("varchar(255)").IsRequired();
             user.Property(u => u.PhoneNumber).HasColumnType("varchar(16)").IsRequired();
             user.Property(u => u.Date).HasColumnType("datetime").IsRequired();
 
@@ -32,10 +32,10 @@ namespace WebAplicacion.Context
             // Nombre de la tabla / propiedades de los campos
             UsersHistory.ToTable("UsersHistory");
             UsersHistory.HasKey(u => u.Id);
-            UsersHistory.Property(u => u.User).HasColumnType("varchar(148)").IsRequired();
+            UsersHistory.Property(u => u.User).HasColumnType("varchar(255)").IsRequired();
             UsersHistory.Property(u => u.Datecreate).HasColumnType("datetime").IsRequired();
-            UsersHistory.Property(u => u.Modified).HasColumnType("varchar(256)").IsRequired();
-            UsersHistory.Property(u => u.ModifiedBy).HasColumnType("varchar(256)").IsRequired();
+            UsersHistory.Property(u => u.Modified).HasColumnType("varchar(255)").IsRequired();
+            UsersHistory.Property(u => u.ModifiedBy).HasColumnType("varchar(255)").IsRequired();
             UsersHistory.Property(u => u.Datemodified).HasColumnType("datetime").IsRequired();
 
 
@@ -47,8 +47,8 @@ namespace WebAplicacion.Context
             comentarioClient.HasKey(c => c.Id);
             comentarioClient.Property(c => c.Order_Id).HasColumnType("varchar(16)");
             comentarioClient.Property(c => c.Client_Id).HasColumnType("varchar(16)");
-            comentarioClient.Property(c => c.Comment).HasColumnType("varchar(256)");
-            comentarioClient.Property(c => c.Qualification).HasColumnType("varchar(256)");
+            comentarioClient.Property(c => c.Comment).HasColumnType("varchar(255)");
+            comentarioClient.Property(c => c.Qualification).HasColumnType("varchar(255)");
 
             //Mapeo de relaciones relacion de uno a uno
             comentarioClient.HasOne(c => c.MaintenanceHistory).WithOne(c => c.ComentariosClientes).HasForeignKey<ComentariosClientes>(c => c.Id).OnDelete(DeleteBehavior.NoAction);
@@ -67,11 +67,11 @@ namespace WebAplicacion.Context
             order.Property(x => x.State).IsRequired();
 
             //Mapeo de relaciones
-            order.HasOne(x => x.Payments).WithOne(x => x.Order).HasForeignKey<Payments>(x => x.Order_Id).OnDelete(DeleteBehavior.NoAction);
-            order.HasOne(x => x.ServicesOrders).WithOne(x => x.Order).HasForeignKey<Services_Orders>(x => x.Order_Id).OnDelete(DeleteBehavior.NoAction);
-            order.HasOne(x => x.MaintenanceHistory).WithOne(x => x.Order).HasForeignKey<Maintenance_History>(x => x.Vehicle_Id).OnDelete(DeleteBehavior.NoAction);
-            order.HasOne(x => x.Vehicle).WithOne(x => x.Order).HasForeignKey<Order>(x => x.Vehicle_Id).OnDelete(DeleteBehavior.NoAction); //muchos a muchos
-            order.HasOne(x => x.InventoryOrders).WithOne(x => x.Order).HasForeignKey<Inventory_Orders>(x => x.Order_Id).OnDelete(DeleteBehavior.NoAction);
+            order.HasOne(x => x.Payments).WithOne(x => x.Order).HasForeignKey<Order>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
+            order.HasOne(x => x.ServicesOrders).WithOne(x => x.Order).HasForeignKey<Order>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
+            order.HasOne(x => x.MaintenanceHistory).WithOne(x => x.Order).HasForeignKey<Order>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
+            order.HasOne(x => x.Vehicle).WithOne(x => x.Order).HasForeignKey<Order>(x => x.Id).OnDelete(DeleteBehavior.NoAction); //muchos a muchos
+            order.HasOne(x => x.InventoryOrders).WithOne(x => x.Order).HasForeignKey<Order>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
             order.HasOne(x => x.Employee).WithOne(x => x.Order).HasForeignKey<Order>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
 
             // Asignamos el modelbuilder para la creación de la tabla y sus propiedades
@@ -84,6 +84,10 @@ namespace WebAplicacion.Context
             client.Property(x => x.Email).HasColumnType("varchar(128)").IsRequired();
             client.Property(x => x.Direccion).HasColumnType("varchar(128)").IsRequired();
             client.Property(x => x.Telefono).HasColumnType("varchar(16)").IsRequired();
+
+            //Mapeo de relaciones
+            client.HasMany(x => x.Vehicles).WithOne(x => x.Client).HasForeignKey(x => x.Client_Id).OnDelete(DeleteBehavior.NoAction);
+
 
             // Asignamos el modelbuilder para la creación de la tabla y sus propiedades
             var employee = modelBuilder.Entity<Employee>();
@@ -103,12 +107,12 @@ namespace WebAplicacion.Context
             inventory.ToTable("Inventory");
             inventory.HasKey(x => x.Id);
             inventory.Property(x => x.Name).HasColumnType("varchar(64)").IsRequired();
-            inventory.Property(x => x.Description).HasColumnType("varchar(256)").IsRequired();
+            inventory.Property(x => x.Description).HasColumnType("varchar(255)").IsRequired();
             inventory.Property(x => x.Amount).HasColumnType("varchar(8)").IsRequired();
             inventory.Property(x => x.Price).HasColumnType("varchar(36)").IsRequired();
 
             //Mapeo de las relaciones
-            //inventory.HasMany(x => x.Inventory_Orders).WithOne(x => x.Inventory).HasForeignKey(x => x.Id).OnDelete(DeleteBehavior.NoAction);
+            inventory.HasOne(x => x.Inventory_Orders).WithOne(x => x.Inventory).HasForeignKey<Inventory>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
 
             // Asignamos el modelbuilder para la creación de la tabla y sus propiedades
             var inventoryorders = modelBuilder.Entity<Inventory_Orders>();
@@ -122,7 +126,7 @@ namespace WebAplicacion.Context
 
             //Mapeo de relaciones
             //inventoryorders.HasOne(x => x.Inventory).WithMany(x => x.Inventory_Orders)();
-            //inventoryorders.HasOne(x => x.Inventory).WithMany(x => x.Inventory_Orders).HasForeignKey(x => x.Id);
+            inventoryorders.HasOne(x => x.Inventory).WithOne(x => x.Inventory_Orders).HasForeignKey<Inventory_Orders>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
 
             // Asignamos el modelbuilder para la creación de la tabla y sus propiedades
             var InventoryPurchase = modelBuilder.Entity<Inventory_purchase>();
@@ -146,7 +150,7 @@ namespace WebAplicacion.Context
             services.ToTable("Services");
             services.HasKey(x => x.Id);
             services.Property(x => x.Name).HasColumnType("varchar(64)").IsRequired();
-            services.Property(x => x.Description).HasColumnType("varchar(256)").IsRequired();
+            services.Property(x => x.Description).HasColumnType("varchar(255)").IsRequired();
             services.Property(x => x.Price).HasColumnType("varchar(36)").IsRequired();
 
             // Asignamos el modelbuilder para la creación de la tabla y sus propiedades
@@ -160,7 +164,7 @@ namespace WebAplicacion.Context
             servicesOrders.Property(x => x.Amount).HasColumnType("varchar(8)").IsRequired();
 
             //Mapeo de relaciones
-            // servicesOrders.HasOne(x => x.Order).WithOne(x => x.ServicesOrders).HasForeignKey<Services_Orders>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
+            servicesOrders.HasOne(x => x.Order).WithOne(x => x.ServicesOrders).HasForeignKey<Services_Orders>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
             //servicesOrders.HasOne(x => x.Service).WithMany(x => x.)
             
             // Asignamos el modelbuilder para la creación de la tabla y sus propiedades
@@ -174,7 +178,7 @@ namespace WebAplicacion.Context
             Buys.Property(x => x.Total).HasColumnType("varchar(16)").IsRequired();
 
             //Mapeo de relaciones
-            Buys.HasOne(x => x.Suppliers).WithOne(x => x.Buys).HasForeignKey<Buys>(x => x.supplier_Id).OnDelete(DeleteBehavior.NoAction);
+            Buys.HasOne(x => x.Suppliers).WithOne(x => x.Buys).HasForeignKey<Buys>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
           
             // Asignamos el modelbuilder para la creación de la tabla y sus propiedades
             var Payments = modelBuilder.Entity<Payments>();
@@ -195,30 +199,30 @@ namespace WebAplicacion.Context
             MaintenanceHistory.HasKey(x => x.Id);
             MaintenanceHistory.Property(x => x.Vehicle_Id).HasColumnType("varchar(8)").IsRequired();
             MaintenanceHistory.Property(x => x.Date).HasColumnType("Datetime").IsRequired();
-            MaintenanceHistory.Property(x => x.Details).HasColumnType("varchar(256)").IsRequired();
+            MaintenanceHistory.Property(x => x.Details).HasColumnType("varchar(255)").IsRequired();
 
             //Mapeo de relaciones
             MaintenanceHistory.HasOne(x => x.Vehicle).WithOne(x => x.MaintenanceHistory).HasForeignKey<Maintenance_History>(x => x.Vehicle_Id).OnDelete(DeleteBehavior.NoAction);
             MaintenanceHistory.HasOne(x => x.Order).WithOne(x => x.MaintenanceHistory).HasForeignKey<Maintenance_History>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
 
             // Asignamos el modelbuilder para la creación de la tabla y sus propiedades
-            var Dates = modelBuilder.Entity<Cities>();
+            var Cities = modelBuilder.Entity<Cities>();
 
             // Nombre de la tabla / propiedades de los campos
-            Dates.ToTable("Cities");
-            Dates.HasKey(x => x.Id);
-            Dates.Property(x => x.Client_Id).HasColumnType("varchar(8)").IsRequired();
-            Dates.Property(x => x.Vehicle_Id).HasColumnType("varchar(8)").IsRequired();
-            Dates.Property(x => x.Motive).HasColumnType("varchar(256)").IsRequired();
-            Dates.Property(x => x.Date).HasColumnType("Datetime").IsRequired();
+            Cities.ToTable("Cities");
+            Cities.HasKey(x => x.Id);
+            Cities.Property(x => x.Client_Id).HasColumnType("varchar(8)").IsRequired();
+            Cities.Property(x => x.Vehicle_Id).HasColumnType("varchar(8)").IsRequired();
+            Cities.Property(x => x.Motive).HasColumnType("varchar(255)").IsRequired();
+            Cities.Property(x => x.Date).HasColumnType("Datetime").IsRequired();
             
             //Mapeo de relaciones
-            Dates.HasOne(x => x.Client).WithOne(x => x.Cities).HasForeignKey<Cities>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
-            Dates.HasOne(x => x.Vehicle).WithOne(x => x.Cities).HasForeignKey<Cities>(x => x.Client_Id).OnDelete(DeleteBehavior.NoAction);
+            Cities.HasOne(x => x.Client).WithOne(x => x.Cities).HasForeignKey<Cities>(x => x.Client_Id).OnDelete(DeleteBehavior.NoAction);
+            Cities.HasOne(x => x.Vehicle).WithOne(x => x.Cities).HasForeignKey<Cities>(x => x.Vehicle_Id).OnDelete(DeleteBehavior.NoAction);
 
             // Asignamos el modelbuilder para la creación de la tabla y sus propiedades
             var Vehicle = modelBuilder.Entity<Vehicle>();
-
+             
             // Nombre de la tabla / propiedades de los campos
             Vehicle.ToTable("Vehicle");
             Vehicle.HasKey(x => x.Id);
@@ -227,6 +231,12 @@ namespace WebAplicacion.Context
             Vehicle.Property(x => x.Model).HasColumnType("varchar(16)").IsRequired();
             Vehicle.Property(x => x.Year).HasColumnType("varchar(8)").IsRequired();
             Vehicle.Property(x => x.Plate).HasColumnType("varchar(8)").IsRequired();
+
+            //Mapeo de relaciones
+            //Vehicle.HasOne(x => x.Client).WithOne(x => x.Vehicle).HasForeignKey<Vehicle>(x => x.Client_Id).OnDelete(DeleteBehavior.NoAction);
+            //Vehicle.HasOne(x => x.MaintenanceHistory).WithOne(x => x.Vehicle).HasForeignKey<Vehicle>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
+            //Vehicle.HasOne(x => x.Cities).WithOne(x => x.Vehicle).HasForeignKey<Vehicle>(x => x.Client_Id).OnDelete(DeleteBehavior.NoAction);
+
 
             modelBuilder.Entity<UsersHistory>().HasKey(u => u.Id);
             modelBuilder.Entity<Dates>().HasKey(u => u.Id);
@@ -242,9 +252,6 @@ namespace WebAplicacion.Context
             modelBuilder.Entity<Suppliers>().HasKey(u => u.Id);
             modelBuilder.Entity<Services>().HasKey(u => u.Id);
             modelBuilder.Entity<Vehicle>().HasKey(u => u.Id);
-
-
-
         }
 
         public DbSet<User> Users { get; set; }

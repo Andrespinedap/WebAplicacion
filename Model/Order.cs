@@ -3,8 +3,8 @@
     public class Order
     {
         public int Id { get; set; }
-        public string Vehicle_Id { get; set; }
-        public string Employee_Id { get; set; }
+        public int Vehicle_Id { get; set; }
+        public int Employee_Id { get; set; }
         public DateTime DateCreated { get; set;}
         public bool State { get; set;}
         public ComentariosClientes  ComentarioCliente { get; set;}
