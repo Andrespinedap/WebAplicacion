@@ -202,10 +202,10 @@ namespace WebAplicacion.Context
             MaintenanceHistory.HasOne(x => x.Order).WithOne(x => x.MaintenanceHistory).HasForeignKey<Maintenance_History>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
 
             // Asignamos el modelbuilder para la creación de la tabla y sus propiedades
-            var Dates = modelBuilder.Entity<Dates>();
+            var Dates = modelBuilder.Entity<Cities>();
 
             // Nombre de la tabla / propiedades de los campos
-            Dates.ToTable("Dates");
+            Dates.ToTable("Cities");
             Dates.HasKey(x => x.Id);
             Dates.Property(x => x.Client_Id).HasColumnType("varchar(8)").IsRequired();
             Dates.Property(x => x.Vehicle_Id).HasColumnType("varchar(8)").IsRequired();
@@ -213,8 +213,8 @@ namespace WebAplicacion.Context
             Dates.Property(x => x.Date).HasColumnType("Datetime").IsRequired();
             
             //Mapeo de relaciones
-            Dates.HasOne(x => x.Client).WithOne(x => x.Cities).HasForeignKey<Dates>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
-            Dates.HasOne(x => x.Vehicle).WithOne(x => x.Cities).HasForeignKey<Dates>(x => x.Client_Id).OnDelete(DeleteBehavior.NoAction);
+            Dates.HasOne(x => x.Client).WithOne(x => x.Cities).HasForeignKey<Cities>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
+            Dates.HasOne(x => x.Vehicle).WithOne(x => x.Cities).HasForeignKey<Cities>(x => x.Client_Id).OnDelete(DeleteBehavior.NoAction);
 
             // Asignamos el modelbuilder para la creación de la tabla y sus propiedades
             var Vehicle = modelBuilder.Entity<Vehicle>();

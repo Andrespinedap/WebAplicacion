@@ -9,7 +9,7 @@
         public int Year { get; set; }
         public string Plate { get; set; }
         public Order Order { get; set; }
-        public Dates Cities { get; set; }
+        public Cities Cities { get; set; }
         public Maintenance_History MaintenanceHistory { get; set; }
 
     }

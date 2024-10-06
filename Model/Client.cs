@@ -12,6 +12,6 @@
         public string Telefono { get; set; } 
 
         public ComentariosClientes ComentariosCliente { get; set; }
-        public Dates Cities { get; set; }
+        public Cities Cities { get; set; }
     }
 }
