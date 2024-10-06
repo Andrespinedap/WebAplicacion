@@ -10,5 +10,7 @@ namespace WebAplicacion.Model
         public string Vehicle_Id { get; set; }
         public string Data_Time { get; set; }
         public string Motivated { get; set; }
+        public Client Client { get; set; }  
+        public Vehicle Vehicle { get; set; }
     }
 }

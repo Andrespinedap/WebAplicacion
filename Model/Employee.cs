@@ -7,6 +7,7 @@
         public string Position { get; set; }
         public int Phone { get; set; }
         public string email { get; set; }
+        public Order Order { get; set; }
        
     }
 }

@@ -7,8 +7,11 @@
         public int Brand { get; set; }
         public int Model { get; set; }
         public int Year { get; set; }
-        public String Plate { get; set; }
-
+        public string Plate { get; set; }
+        public Order Order { get; set; }
+        public Cities Cities { get; set; }
+        public Maintenance_History Maintenance_History { get; set; }
+       
     }
 
     }

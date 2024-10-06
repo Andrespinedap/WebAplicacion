@@ -6,5 +6,6 @@
         public string Name { get; set; }
         public string Contacts { get; set; }
         public String Address { get; set;}
+        public Buys Buys { get; set; }
     }
 }

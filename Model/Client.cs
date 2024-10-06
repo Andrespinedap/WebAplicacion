@@ -8,6 +8,9 @@
         public string Email { get; set; }
         public string Phone { get; set; }
         public string Address { get; set; }
+
+       public Comentari_Client Comentari { get; set; }
+        public Cities Cities { get; set; }
        
     }
 }

@@ -10,5 +10,8 @@
         public string Order_Id { get; set; }
         public string Comment { get; set; }
         public string Qualification { get; set; }
+
+        public Client Client { get; set; }
+        public Maintenance_History Maintenance_History { get; set; }
     }
 }
