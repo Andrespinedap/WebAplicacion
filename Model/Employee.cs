@@ -6,8 +6,9 @@
         public string Name { get; set; }
         public string Position { get; set; }
         public int Phone { get; set; }
-        public string email { get; set; }
+        public string Email { get; set; }
         public Order Order { get; set; }
-       
+        public ICollection<Order> Orders { get; } = new List<Order>();
+
     }
 }

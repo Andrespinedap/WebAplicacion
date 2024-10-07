@@ -8,5 +8,6 @@
         public int Amount { get; set; }
         public string Payment_Method { get; set; }
         public Order Order { get; set; }
+        public ICollection<Order> Orders { get; } = new List<Order>();
     }
 }

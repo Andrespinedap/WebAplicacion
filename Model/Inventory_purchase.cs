@@ -6,8 +6,8 @@
         public int Buys_Id { get; set; }
         public string Inventory { get; set; }
         public int Amount { get; set; }
-        public int unit_price { get; set; }
-        public Inventory inventory { get; set; }
-        public Buys buys { get; set; }
+        public int Unit_price { get; set; }
+        public Inventory Inventories { get; set; }
+        public Buys Buys { get; set; }
     }
 }

@@ -13,6 +13,8 @@
         public Client Client { get; set; }
         public Maintenance_History MaintenanceHistory { get; set; }
         //public List<Client> Clients { get; set; } = [];
+        public ICollection<Order> Orders { get; } = new List<Order>();
+        public ICollection<Maintenance_History> MaintenanceXhistory { get; } = new List<Maintenance_History>();
     }
 
     }

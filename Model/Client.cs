@@ -26,5 +26,6 @@
         public Cities Cities { get; set; }
         //public Vehicle Vehicle { get; set; }
         public ICollection<Vehicle> Vehicles { get; } = new List<Vehicle>();
+        public List<ComentariosClientes> ComentariosXcliente { get; set; } = new List<ComentariosClientes>();
     }
 }
