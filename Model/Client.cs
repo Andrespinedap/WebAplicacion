@@ -1,12 +1,30 @@
-﻿namespace WebAplicacion.Model
+namespace WebAplicacion.Model
 {
     public class Client
     {
         public int Id { get; set; }
+        /// <summary>
+        /// Id del Cliente
+        /// </summary>
         public string Name { get; set; }
-        public string LastName { get; set; }
+        /// <summary>
+        /// Nombre del cliente
+        /// </summary>
+        public string Direccion { get; set; }
+        /// <summary>
+        /// Direccion
+        /// </summary>
         public string Email { get; set; }
-        public int Phone { get; set; }
-
+        /// <summary>
+        /// Email
+        /// </summary>
+        public int Telefono { get; set; }
+        /// <summary>
+        /// Telefono
+        /// </summary>
+        public ComentariosClientes ComentariosCliente { get; set; }
+        public Cities Cities { get; set; }
+        //public Vehicle Vehicle { get; set; }
+        public ICollection<Vehicle> Vehicles { get; } = new List<Vehicle>();
     }
 }

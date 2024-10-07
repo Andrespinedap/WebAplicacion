@@ -7,5 +7,6 @@
         public DateTime Date { get; set; }
         public int Amount { get; set; }
         public string Payment_Method { get; set; }
+        public Order Order { get; set; }
     }
 }
