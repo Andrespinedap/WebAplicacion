@@ -9,5 +9,6 @@
         public int Total { get; set; }
         public Inventory_purchase Inventory_Purchase { get; set; }
         public Suppliers Suppliers { get; set; }
+        public List<Inventory_purchase> InventoryXpurchase { get; set; } = [];
     }
 }

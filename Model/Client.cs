@@ -24,7 +24,7 @@ namespace WebAplicacion.Model
         /// </summary>
         public ComentariosClientes ComentariosCliente { get; set; }
         public Cities Cities { get; set; }
-        //public Vehicle Vehicle { get; set; }
         public ICollection<Vehicle> Vehicles { get; } = new List<Vehicle>();
+        public ICollection<ComentariosClientes> ComentariosXcliente { get; } = new List<ComentariosClientes>();
     }
 }

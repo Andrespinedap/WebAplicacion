@@ -12,7 +12,10 @@ namespace WebAplicacion.Model
         public Cities Cities { get; set; }
         public Client Client { get; set; }
         public Maintenance_History MaintenanceHistory { get; set; }
-        //public List<Client> Clients { get; set; } = [];
+        public List<Maintenance_History> MaintenanceXhistory { get; set; } = [];
+
+        public List<Order> Orders { get; set; } = [];
+
     }
 
     }
