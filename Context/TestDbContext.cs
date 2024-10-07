@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using WebAplicacion.Model;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 

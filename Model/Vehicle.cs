@@ -1,4 +1,4 @@
-﻿namespace WebAplicacion.Model
+namespace WebAplicacion.Model
 {
     public class Vehicle
     {
@@ -18,4 +18,3 @@
     }
 
     }
-
