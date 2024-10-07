@@ -30,7 +30,5 @@
         /// Propiedad de navegación con la entidad Cliente
         /// </summary>
         public Client Client { get; set; }
-
-        //public List<Client> Clients { get; set; } = new List<Client>();
     }
 }

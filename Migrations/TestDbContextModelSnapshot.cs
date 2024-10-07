@@ -30,15 +30,20 @@ namespace WebAplicacion.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("Datetime");
 
+                    b.Property<int>("Inventory_PurchaseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Supplier_Id")
+                        .IsRequired()
+                        .HasColumnType("varchar(8)");
+
                     b.Property<string>("Total")
                         .IsRequired()
                         .HasColumnType("varchar(16)");
 
-                    b.Property<string>("supplier_Id")
-                        .IsRequired()
-                        .HasColumnType("varchar(8)");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("Inventory_PurchaseId");
 
                     b.ToTable("Buys", (string)null);
                 });
@@ -85,6 +90,9 @@ namespace WebAplicacion.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("ComentariosClienteId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Direccion")
                         .IsRequired()
                         .HasColumnType("varchar(128)");
@@ -102,6 +110,8 @@ namespace WebAplicacion.Migrations
                         .HasColumnType("varchar(16)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ComentariosClienteId");
 
                     b.ToTable("Clients", (string)null);
                 });
@@ -129,8 +139,7 @@ namespace WebAplicacion.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Client_Id")
-                        .IsUnique();
+                    b.HasIndex("Client_Id");
 
                     b.ToTable("ComentariosClientes", (string)null);
                 });
@@ -179,9 +188,16 @@ namespace WebAplicacion.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("varchar(128)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("varchar(64)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Phone")
                         .IsRequired()
@@ -191,11 +207,9 @@ namespace WebAplicacion.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(36)");
 
-                    b.Property<string>("email")
-                        .IsRequired()
-                        .HasColumnType("varchar(128)");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
 
                     b.ToTable("Employee", (string)null);
                 });
@@ -268,14 +282,11 @@ namespace WebAplicacion.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(8)");
 
-                    b.Property<string>("unit_price")
+                    b.Property<string>("Unit_price")
                         .IsRequired()
                         .HasColumnType("varchar(8)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Buys_Id")
-                        .IsUnique();
 
                     b.ToTable("InventoryPurchase", (string)null);
                 });
@@ -297,9 +308,6 @@ namespace WebAplicacion.Migrations
                         .HasColumnType("varchar(8)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Vehicle_Id")
-                        .IsUnique();
 
                     b.ToTable("MaintenanceHistory", (string)null);
                 });
@@ -347,6 +355,9 @@ namespace WebAplicacion.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("Datetime");
 
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Order_Id")
                         .IsRequired()
                         .HasColumnType("varchar(8)");
@@ -357,16 +368,15 @@ namespace WebAplicacion.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OrderId");
+
                     b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("WebAplicacion.Model.Services", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -380,12 +390,7 @@ namespace WebAplicacion.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(36)");
 
-                    b.Property<int>("ServiceOrdersId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ServiceOrdersId");
 
                     b.ToTable("Services", (string)null);
                 });
@@ -393,7 +398,10 @@ namespace WebAplicacion.Migrations
             modelBuilder.Entity("WebAplicacion.Model.Services_Orders", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Amount")
                         .IsRequired()
@@ -409,6 +417,9 @@ namespace WebAplicacion.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Order_Id")
+                        .IsUnique();
+
                     b.ToTable("ServicesOrders", (string)null);
                 });
 
@@ -422,19 +433,24 @@ namespace WebAplicacion.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<int>("BuysId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Contacts")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(256)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Suppliers");
+                    b.HasIndex("BuysId");
+
+                    b.ToTable("Suppliers", (string)null);
                 });
 
             modelBuilder.Entity("WebAplicacion.Model.User", b =>
@@ -528,9 +544,15 @@ namespace WebAplicacion.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(8)");
 
+                    b.Property<int>("MaintenanceHistoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasColumnType("varchar(16)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Plate")
                         .IsRequired()
@@ -542,16 +564,30 @@ namespace WebAplicacion.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Client_Id");
+
+                    b.HasIndex("MaintenanceHistoryId");
+
+                    b.HasIndex("OrderId");
+
                     b.ToTable("Vehicle", (string)null);
                 });
 
             modelBuilder.Entity("WebAplicacion.Model.Buys", b =>
                 {
                     b.HasOne("WebAplicacion.Model.Suppliers", "Suppliers")
-                        .WithOne("Buys")
-                        .HasForeignKey("WebAplicacion.Model.Buys", "Id")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .WithMany("Buy")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("WebAplicacion.Model.Inventory_purchase", "Inventory_Purchase")
+                        .WithMany()
+                        .HasForeignKey("Inventory_PurchaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Inventory_Purchase");
 
                     b.Navigation("Suppliers");
                 });
@@ -575,11 +611,22 @@ namespace WebAplicacion.Migrations
                     b.Navigation("Vehicle");
                 });
 
+            modelBuilder.Entity("WebAplicacion.Model.Client", b =>
+                {
+                    b.HasOne("WebAplicacion.Model.ComentariosClientes", "ComentariosCliente")
+                        .WithMany()
+                        .HasForeignKey("ComentariosClienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ComentariosCliente");
+                });
+
             modelBuilder.Entity("WebAplicacion.Model.ComentariosClientes", b =>
                 {
                     b.HasOne("WebAplicacion.Model.Client", "Client")
-                        .WithOne("ComentariosCliente")
-                        .HasForeignKey("WebAplicacion.Model.ComentariosClientes", "Client_Id")
+                        .WithMany("ComentariosXcliente")
+                        .HasForeignKey("Client_Id")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -613,6 +660,17 @@ namespace WebAplicacion.Migrations
                     b.Navigation("Vehicle");
                 });
 
+            modelBuilder.Entity("WebAplicacion.Model.Employee", b =>
+                {
+                    b.HasOne("WebAplicacion.Model.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("WebAplicacion.Model.Inventory_Orders", b =>
                 {
                     b.HasOne("WebAplicacion.Model.Inventory", "Inventory")
@@ -626,21 +684,21 @@ namespace WebAplicacion.Migrations
 
             modelBuilder.Entity("WebAplicacion.Model.Inventory_purchase", b =>
                 {
-                    b.HasOne("WebAplicacion.Model.Buys", "buys")
-                        .WithOne("Inventory_Purchase")
-                        .HasForeignKey("WebAplicacion.Model.Inventory_purchase", "Buys_Id")
+                    b.HasOne("WebAplicacion.Model.Buys", "Buys")
+                        .WithMany("InventoryXpurchase")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("WebAplicacion.Model.Inventory", "inventory")
+                    b.HasOne("WebAplicacion.Model.Inventory", "Inventories")
                         .WithOne("Inventory_Purchase")
                         .HasForeignKey("WebAplicacion.Model.Inventory_purchase", "Id")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("buys");
+                    b.Navigation("Buys");
 
-                    b.Navigation("inventory");
+                    b.Navigation("Inventories");
                 });
 
             modelBuilder.Entity("WebAplicacion.Model.Maintenance_History", b =>
@@ -652,8 +710,8 @@ namespace WebAplicacion.Migrations
                         .IsRequired();
 
                     b.HasOne("WebAplicacion.Model.Vehicle", "Vehicle")
-                        .WithOne("MaintenanceHistory")
-                        .HasForeignKey("WebAplicacion.Model.Maintenance_History", "Vehicle_Id")
+                        .WithMany("MaintenanceXhistory")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -671,8 +729,8 @@ namespace WebAplicacion.Migrations
                         .IsRequired();
 
                     b.HasOne("WebAplicacion.Model.Employee", "Employee")
-                        .WithOne("Order")
-                        .HasForeignKey("WebAplicacion.Model.Order", "Id")
+                        .WithMany("Orders")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -683,14 +741,14 @@ namespace WebAplicacion.Migrations
                         .IsRequired();
 
                     b.HasOne("WebAplicacion.Model.Payments", "Payments")
-                        .WithOne("Order")
-                        .HasForeignKey("WebAplicacion.Model.Order", "Id")
+                        .WithMany("Orders")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("WebAplicacion.Model.Vehicle", "Vehicle")
-                        .WithOne("Order")
-                        .HasForeignKey("WebAplicacion.Model.Order", "Id")
+                        .WithMany("Orders")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -705,32 +763,80 @@ namespace WebAplicacion.Migrations
                     b.Navigation("Vehicle");
                 });
 
-            modelBuilder.Entity("WebAplicacion.Model.Services", b =>
+            modelBuilder.Entity("WebAplicacion.Model.Payments", b =>
                 {
-                    b.HasOne("WebAplicacion.Model.Services_Orders", "ServiceOrders")
-                        .WithMany("Service")
-                        .HasForeignKey("ServiceOrdersId")
+                    b.HasOne("WebAplicacion.Model.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ServiceOrders");
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("WebAplicacion.Model.Services", b =>
+                {
+                    b.HasOne("WebAplicacion.Model.Services_Orders", "ServiceOrder")
+                        .WithMany("Service")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("ServiceOrder");
                 });
 
             modelBuilder.Entity("WebAplicacion.Model.Services_Orders", b =>
                 {
                     b.HasOne("WebAplicacion.Model.Order", "Order")
                         .WithOne("ServicesOrders")
-                        .HasForeignKey("WebAplicacion.Model.Services_Orders", "Id")
+                        .HasForeignKey("WebAplicacion.Model.Services_Orders", "Order_Id")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("WebAplicacion.Model.Suppliers", b =>
+                {
+                    b.HasOne("WebAplicacion.Model.Buys", "Buys")
+                        .WithMany()
+                        .HasForeignKey("BuysId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Buys");
+                });
+
+            modelBuilder.Entity("WebAplicacion.Model.Vehicle", b =>
+                {
+                    b.HasOne("WebAplicacion.Model.Client", "Client")
+                        .WithMany("Vehicles")
+                        .HasForeignKey("Client_Id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("WebAplicacion.Model.Maintenance_History", "MaintenanceHistory")
+                        .WithMany()
+                        .HasForeignKey("MaintenanceHistoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebAplicacion.Model.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("MaintenanceHistory");
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("WebAplicacion.Model.Buys", b =>
                 {
-                    b.Navigation("Inventory_Purchase")
-                        .IsRequired();
+                    b.Navigation("InventoryXpurchase");
                 });
 
             modelBuilder.Entity("WebAplicacion.Model.Client", b =>
@@ -738,14 +844,14 @@ namespace WebAplicacion.Migrations
                     b.Navigation("Cities")
                         .IsRequired();
 
-                    b.Navigation("ComentariosCliente")
-                        .IsRequired();
+                    b.Navigation("ComentariosXcliente");
+
+                    b.Navigation("Vehicles");
                 });
 
             modelBuilder.Entity("WebAplicacion.Model.Employee", b =>
                 {
-                    b.Navigation("Order")
-                        .IsRequired();
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("WebAplicacion.Model.Inventory", b =>
@@ -780,8 +886,7 @@ namespace WebAplicacion.Migrations
 
             modelBuilder.Entity("WebAplicacion.Model.Payments", b =>
                 {
-                    b.Navigation("Order")
-                        .IsRequired();
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("WebAplicacion.Model.Services_Orders", b =>
@@ -791,8 +896,7 @@ namespace WebAplicacion.Migrations
 
             modelBuilder.Entity("WebAplicacion.Model.Suppliers", b =>
                 {
-                    b.Navigation("Buys")
-                        .IsRequired();
+                    b.Navigation("Buy");
                 });
 
             modelBuilder.Entity("WebAplicacion.Model.Vehicle", b =>
@@ -800,11 +904,9 @@ namespace WebAplicacion.Migrations
                     b.Navigation("Cities")
                         .IsRequired();
 
-                    b.Navigation("MaintenanceHistory")
-                        .IsRequired();
+                    b.Navigation("MaintenanceXhistory");
 
-                    b.Navigation("Order")
-                        .IsRequired();
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

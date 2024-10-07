@@ -1,4 +1,4 @@
-﻿namespace WebAplicacion.Model
+namespace WebAplicacion.Model
 {
     public class Payments
     {
@@ -9,6 +9,5 @@
         public string Payment_Method { get; set; }
         public Order Order { get; set; }
         public ICollection<Order> Orders { get; } = new List<Order>();
-
     }
 }
