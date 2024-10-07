@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using WebAplicacion.Model;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WebAplicacion.Context
 {
@@ -67,8 +68,7 @@ namespace WebAplicacion.Context
             order.Property(x => x.State).IsRequired();
 
             //Mapeo de relaciones
-            order.HasOne(x => x.Payments).WithOne(x => x.Order).HasForeignKey<Order>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
-            order.HasOne(x => x.ServicesOrders).WithOne(x => x.Order).HasForeignKey<Order>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
+            order.HasOne(x => x.Payments).WithMany(x => x.Orders).HasForeignKey(x => x.Id).OnDelete(DeleteBehavior.NoAction); // de uno a muchos
             order.HasOne(x => x.MaintenanceHistory).WithOne(x => x.Order).HasForeignKey<Order>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
             order.HasOne(x => x.Vehicle).WithOne(x => x.Order).HasForeignKey<Order>(x => x.Id).OnDelete(DeleteBehavior.NoAction); //muchos a muchos
             order.HasOne(x => x.InventoryOrders).WithOne(x => x.Order).HasForeignKey<Order>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
@@ -86,8 +86,9 @@ namespace WebAplicacion.Context
             client.Property(x => x.Telefono).HasColumnType("varchar(16)").IsRequired();
 
             //Mapeo de relaciones
-            client.HasMany(x => x.Vehicles).WithOne(x => x.Client).HasForeignKey(x => x.Client_Id).OnDelete(DeleteBehavior.NoAction);
-
+                // Relacion de uno a muchos
+            client.HasMany(x => x.Vehicles).WithOne(x => x.Client).HasForeignKey(x => x.Client_Id).OnDelete(DeleteBehavior.NoAction); // un cliente tiene muchos vehiculos
+            client.HasMany(x => x.ComentariosXcliente).WithOne(x => x.Client).HasForeignKey(x => x.Client_Id).OnDelete(DeleteBehavior.NoAction); // un cliente puede tener varios comentarios
 
             // Asignamos el modelbuilder para la creación de la tabla y sus propiedades
             var employee = modelBuilder.Entity<Employee>();
@@ -99,6 +100,10 @@ namespace WebAplicacion.Context
             employee.Property(x => x.email).HasColumnType("varchar(128)").IsRequired();
             employee.Property(x => x.Phone).HasColumnType("varchar(16)").IsRequired();
             employee.Property(x => x.Position).HasColumnType("varchar(36)").IsRequired();
+
+            //Mapeo de relaciones
+            // Relacion de uno a muchos
+            employee.HasMany(x => x.Orders).WithOne(x => x.Employee).HasForeignKey(x => x.Id).OnDelete(DeleteBehavior.NoAction);//Un empleado tiene muchas órdenes, Una orden pertenece a un solo empleado 
 
             // Asignamos el modelbuilder para la creación de la tabla y sus propiedades
             var inventory = modelBuilder.Entity<Inventory>();
@@ -125,7 +130,7 @@ namespace WebAplicacion.Context
             inventoryorders.Property(x => x.Inventory_Id).HasColumnType("varchar(8)").IsRequired();
 
             //Mapeo de relaciones
-            //inventoryorders.HasOne(x => x.Inventory).WithMany(x => x.Inventory_Orders)();
+            
             inventoryorders.HasOne(x => x.Inventory).WithOne(x => x.Inventory_Orders).HasForeignKey<Inventory_Orders>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
 
             // Asignamos el modelbuilder para la creación de la tabla y sus propiedades
@@ -141,7 +146,7 @@ namespace WebAplicacion.Context
 
             //Mapeo de relaciones
             InventoryPurchase.HasOne(x => x.inventory).WithOne(x => x.Inventory_Purchase).HasForeignKey<Inventory_purchase>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
-            InventoryPurchase.HasOne(x => x.buys).WithOne(x => x.Inventory_Purchase).HasForeignKey<Inventory_purchase>(x => x.Buys_Id).OnDelete(DeleteBehavior.NoAction);
+            InventoryPurchase.HasOne(x => x.Buys).WithOne(x => x.Inventory_Purchase).HasForeignKey<Inventory_purchase>(x => x.Buys_Id).OnDelete(DeleteBehavior.NoAction);
 
             // Asignamos el modelbuilder para la creación de la tabla y sus propiedades
             var services = modelBuilder.Entity<Services>();
@@ -178,7 +183,7 @@ namespace WebAplicacion.Context
             Buys.Property(x => x.Total).HasColumnType("varchar(16)").IsRequired();
 
             //Mapeo de relaciones
-            Buys.HasOne(x => x.Suppliers).WithOne(x => x.Buys).HasForeignKey<Buys>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
+            Buys.HasMany(x => x.InventoryXpurchase).WithOne(x => x.Buys).HasForeignKey(x => x.Id).OnDelete(DeleteBehavior.NoAction);
           
             // Asignamos el modelbuilder para la creación de la tabla y sus propiedades
             var Payments = modelBuilder.Entity<Payments>();
@@ -193,6 +198,7 @@ namespace WebAplicacion.Context
 
             // Asignamos el modelbuilder para la creación de la tabla y sus propiedades
             var MaintenanceHistory = modelBuilder.Entity<Maintenance_History>();
+
 
             // Nombre de la tabla / propiedades de los campos
             MaintenanceHistory.ToTable("MaintenanceHistory");
@@ -233,9 +239,22 @@ namespace WebAplicacion.Context
             Vehicle.Property(x => x.Plate).HasColumnType("varchar(8)").IsRequired();
 
             //Mapeo de relaciones
-            //Vehicle.HasOne(x => x.Client).WithOne(x => x.Vehicle).HasForeignKey<Vehicle>(x => x.Client_Id).OnDelete(DeleteBehavior.NoAction);
-            //Vehicle.HasOne(x => x.MaintenanceHistory).WithOne(x => x.Vehicle).HasForeignKey<Vehicle>(x => x.Id).OnDelete(DeleteBehavior.NoAction);
-            //Vehicle.HasOne(x => x.Cities).WithOne(x => x.Vehicle).HasForeignKey<Vehicle>(x => x.Client_Id).OnDelete(DeleteBehavior.NoAction);
+            Vehicle.HasMany(x => x.MaintenanceXhistory).WithOne(x => x.Vehicle).HasForeignKey(x => x.Id).OnDelete(DeleteBehavior.NoAction); // Un vehículo tiene muchos historiales
+            Vehicle.HasMany(x => x.Orders).WithOne(x => x.Vehicle).HasForeignKey(x => x.Id).OnDelete(DeleteBehavior.NoAction); // un vehiculo tiene muchas ordenes 
+
+
+            // Asignamos el modelbuilder para la creación de la tabla y sus propiedades
+            var Suppliers = modelBuilder.Entity<Suppliers>();
+
+            // Nombre de la tabla / propiedades de los campos
+            Suppliers.ToTable("Suppliers");
+            Suppliers.HasKey(x => x.Id);
+            Suppliers.Property(x => x.Name).HasColumnType("varchar(256)").IsRequired();
+            Suppliers.Property(x => x.Contacts).HasColumnType("varchar(256)").IsRequired();
+            Suppliers.Property(x => x.Address).HasColumnType("varchar(64)").IsRequired();
+
+            //Mapeo de relaciones
+            Suppliers.HasMany(x => x.Buy).WithOne(x => x.Suppliers).HasForeignKey(x => x.Id);// Un proveedor tiene muchas compras // Una compra tiene un proveedor
 
 
             modelBuilder.Entity<UsersHistory>().HasKey(u => u.Id);

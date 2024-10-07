@@ -14,5 +14,6 @@ namespace WebAplicacion.Model
         public Maintenance_History MaintenanceHistory { get; set;}
         public Vehicle Vehicle { get; set;}
         public Inventory_Orders InventoryOrders { get; set;}
+        public List<Maintenance_History> MaintenanceXhistory { get; set; } = [];
     }
 }

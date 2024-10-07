@@ -7,5 +7,7 @@ namespace WebAplicacion.Model
         public string Contacts { get; set; }
         public string Address { get; set;}
         public Buys Buys { get; set; }
+
+        public List<Buys> Buy { get; set; } = [];
     }
 }
