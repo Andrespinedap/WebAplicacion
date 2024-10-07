@@ -1,4 +1,4 @@
-﻿namespace WebAplicacion.Model
+namespace WebAplicacion.Model
 {
     //tabla compra
     public class Buys
