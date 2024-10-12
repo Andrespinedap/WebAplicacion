@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using WebAplicacion.Abstractions;
 using WebAplicacion.Context;
 using WebAplicacion.Model;
