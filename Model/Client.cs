@@ -3,29 +3,33 @@ namespace WebAplicacion.Model
     public class Client
     {
         public int Id { get; set; }
+
         /// <summary>
         /// Id del Cliente
         /// </summary>
-        public string Name { get; set; }
+        public string? Name { get; set; }
+
         /// <summary>
         /// Nombre del cliente
         /// </summary>
-        public string Direccion { get; set; }
+        public string? Direccion { get; set; }
+
         /// <summary>
         /// Direccion
         /// </summary>
-        public string Email { get; set; }
-        /// <summary>
-        /// Email
-        /// </summary>
-        public int Telefono { get; set; }
+        public string? Email { get; set; }
+
         /// <summary>
         /// Telefono
         /// </summary>
-        public ComentariosClientes ComentariosCliente { get; set; }
-        public Cities Cities { get; set; }
-        //public Vehicle Vehicle { get; set; }
+        public int Telefono { get; set; }
+
+        public ComentariosClientes? ComentariosCliente { get; set; }
+
+        public Cities? Cities { get; set; }
+
         public ICollection<Vehicle> Vehicles { get; } = new List<Vehicle>();
-        public List<ComentariosClientes> ComentariosXcliente { get; set; } = new List<ComentariosClientes>();
+
+        public ICollection<ComentariosClientes> ComentariosXcliente { get; } = new List<ComentariosClientes>();
     }
 }

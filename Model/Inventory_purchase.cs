@@ -8,6 +8,7 @@ namespace WebAplicacion.Model
         public int Amount { get; set; }
         public int Unit_price { get; set; }
         public Inventory Inventories { get; set; }
-        public Buys Buys { get; set; }
+        public Buys Buy { get; set; }
+        //public ICollection<Buys> Buys { get; } = new List<Buys>();
     }
 }
