@@ -1,4 +1,4 @@
-﻿namespace WebAplicacion.Model
+namespace WebAplicacion.Model
 {
     public class Inventory_purchase
     {
