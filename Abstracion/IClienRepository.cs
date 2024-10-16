@@ -1,38 +1,35 @@
 ﻿using WebAplicacion.Model;
 
-namespace WebAplicacion.Abstractions
+namespace WebAplicacion.Abstracion
 {
-    /// <summary>
-    /// Interaz que implementa la firma de los metodos
-    /// </summary>
-    public interface IClientRepository
+    public interface IClienRepository
     {
-        ICollection<Client> GetUsers();
-        //Llamar el Modelo de datos
-      
-        Task<Client> FindAsync(int id);
+
         /// <summary>
-        /// Consulta un Client por Id
+        /// Consulta una Client por Id
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Retorna los datos de dicha Client</returns>
-        Task<List<Client>> AllAsync();
+        Task<Client> FindAsync(int id);
         /// <summary>
-        /// Consulta todos los Clients
+        /// Consulta todas las Clients
         /// </summary>
         /// <returns>Retorna una lista de Clients</returns>
-        Task<bool> CreateAsync(Client data);
+        Task<List<Client>> AllAsync();
         /// <summary>
         /// Crea una Client
         /// </summary>
         /// <param name="data"></param>
         /// <returns>Retorna el ID de la Client</returns>
-        Task<bool> UpdateAsync(int id, Client data);
+        Task<bool> CreateAsync(Client data);
         /// <summary>
         /// Actualiza una Client mediante el Id insertado
         /// </summary>
         /// <param name="id"></param>
         /// <param name="data"></param>
         /// <returns>Retorna un true si la información se actualizo correctamente</returns>
+        Task<bool> UpdateAsync(int id, Client data);
     }
 }
+    
+

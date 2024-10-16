@@ -1,4 +1,4 @@
-﻿using WebAplicacion.Model;
+using WebAplicacion.Model;
 
 namespace WebAplicacion.Interfaces
 {

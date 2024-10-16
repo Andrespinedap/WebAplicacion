@@ -5,18 +5,12 @@ namespace WebAplicacion.Abstractions
     public interface IBuysRepository
     {
         ICollection<Buys> GetBuys();
-
-        Task<Buys> FindAsync(int id);
-        /// <summary>
-        /// Consulta una Buys por Id
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Retorna los datos de dicha Buys</returns>
         Task<List<Buys>> AllAsync();
         /// <summary>
-        /// Consulta todas las Buyss
-        /// </summary>
-        /// <returns>Retorna una lista de Buyss</returns>
+      
         Task<bool> CreateAsync(Buys data);
         /// <summary>
         /// Crea una Buys
