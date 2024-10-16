@@ -99,5 +99,10 @@ namespace WebAplicacion.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public ICollection<Client> GetUsers()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

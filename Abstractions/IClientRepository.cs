@@ -7,7 +7,7 @@ namespace WebAplicacion.Abstractions
     /// </summary>
     public interface IClientRepository
     {
-        ICollection<Client> GetClients();
+        ICollection<Client> GetUsers();
         Task<Client> FindAsync(int id);
         /// <summary>
         /// Consulta un Client por Id
