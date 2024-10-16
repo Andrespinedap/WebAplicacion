@@ -1,21 +1,23 @@
-﻿using WebAplicacion.Model;
+using WebAplicacion.Model;
 
-namespace WebAplicacion.Abstractions
+namespace WebAplicacion.Interfaces
 {
     public interface IUserRepository
     {
-        ICollection<User> GetUser();
+        ICollection<User> GetUsers();
+        //Llamar el Modelo de datos
+
         Task<User> FindAsync(int id);
         /// <summary>
-        /// Consulta un User por Id
+        /// Consulta una User por Id
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Retorna los datos de dicha User</returns>
         Task<List<User>> AllAsync();
         /// <summary>
-        /// Consulta todos los Clients
+        /// Consulta todas las Users
         /// </summary>
-        /// <returns>Retorna una lista de Clients</returns>
+        /// <returns>Retorna una lista de Users</returns>
         Task<bool> CreateAsync(User data);
         /// <summary>
         /// Crea una User
@@ -29,5 +31,6 @@ namespace WebAplicacion.Abstractions
         /// <param name="id"></param>
         /// <param name="data"></param>
         /// <returns>Retorna un true si la información se actualizo correctamente</returns>
+
     }
 }

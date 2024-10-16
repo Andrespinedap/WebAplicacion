@@ -1,29 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using WebAplicacion.Abstractions;
-using WebAplicacion.Interfaces;
 using WebAplicacion.Model;
 
 namespace WebAplicacion.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController : Controller
+    public class UserHistoryController : ControllerBase
     {
-
-        private readonly IUserRepository repository;
-
-        private readonly IUserRepository _userRepository;
-
+        /// <summary>
+        /// Implementa los metodos de comunicación para interactuar con la base de datos
+        /// </summary>
+        private readonly IUserHistoryRepository repository;
         /// <summary>
         /// Logger para registrar en consola algun error o estados success
         /// </summary>
-        private readonly ILogger<UserController> logger;
+        private readonly ILogger<UserHistoryController> logger;
 
         /// <summary>
-        /// Constructor para la clase <see cref="UserController"/>
+        /// Constructor para la clase <see cref="UserHistoryController"/>
         /// </summary>
         /// <param name="repository"></param>
-        public UserController(IUserRepository repository, ILogger<UserController> logger)
+        public UserHistoryController(IUserHistoryRepository repository, ILogger<UserHistoryController> logger)
         {
             this.repository = repository;
             this.logger = logger;
@@ -75,7 +75,7 @@ namespace WebAplicacion.Controllers
             return Ok(result);
         }
         /// <summary>
-        /// Servicio encargado de crear una User
+        /// Servicio encargado de crear una UserHistory
         /// </summary>
         /// <param name="data"></param>
         /// <returns>Retorna el Id de la compañia</returns>
@@ -83,7 +83,7 @@ namespace WebAplicacion.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Create(User data)
+        public async Task<IActionResult> Create(UsersHistory data)
         {
             // Validamos que la data no sea nula
             if (data == null)
@@ -112,7 +112,7 @@ namespace WebAplicacion.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update(int id, User data)
+        public async Task<IActionResult> Update(int id, UsersHistory data)
         {
             if (id < 0)
                 return NotFound("id is not valid");
