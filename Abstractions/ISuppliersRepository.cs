@@ -2,37 +2,32 @@
 
 namespace WebAplicacion.Abstractions
 {
-    /// <summary>
-    /// Interaz que implementa la firma de los metodos
-    /// </summary>
-    public interface IClientRepository
+    public interface ISuppliersRepository
     {
-        ICollection<Client> GetClients();
-        Task<Client> FindAsync(int id);
+        ICollection<Suppliers> GetSuppliers();
+        Task<Suppliers> FindAsync(int id);
         /// <summary>
-        /// Consulta un Client por Id
+        /// Consulta un Suppliers por Id
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>Retorna los datos de dicha Client</returns>
-        Task<List<Client>> AllAsync();
+        /// <returns>Retorna los datos de dicha Suppliers</returns>
+        Task<List<Suppliers>> AllAsync();
         /// <summary>
         /// Consulta todos los Clients
         /// </summary>
         /// <returns>Retorna una lista de Clients</returns>
-        Task<bool> CreateAsync(Client data);
+        Task<bool> CreateAsync(Suppliers data);
         /// <summary>
-        /// Crea una Client
+        /// Crea una Suppliers
         /// </summary>
         /// <param name="data"></param>
-        /// <returns>Retorna el ID de la Client</returns>
-        Task<bool> UpdateAsync(int id, Client data);
+        /// <returns>Retorna el ID de la Suppliers</returns>
+        Task<bool> UpdateAsync(int id, Suppliers data);
         /// <summary>
-        /// Actualiza una Client mediante el Id insertado
+        /// Actualiza una Suppliers mediante el Id insertado
         /// </summary>
         /// <param name="id"></param>
         /// <param name="data"></param>
         /// <returns>Retorna un true si la información se actualizo correctamente</returns>
-
-        
     }
 }
