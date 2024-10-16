@@ -2,32 +2,34 @@
 
 namespace WebAplicacion.Abstractions
 {
-    public interface IUserRepository
+    public interface ICitiesRepository
     {
-        ICollection<User> GetUser();
-        Task<User> FindAsync(int id);
+        ICollection<Cities> GetCities();
+        Task<Cities> FindAsync(int id);
         /// <summary>
-        /// Consulta un User por Id
+        /// Consulta un Cities por Id
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>Retorna los datos de dicha User</returns>
-        Task<List<User>> AllAsync();
+        /// <returns>Retorna los datos de dicha Cities</returns>
+        Task<List<Cities>> AllAsync();
         /// <summary>
         /// Consulta todos los Clients
         /// </summary>
         /// <returns>Retorna una lista de Clients</returns>
-        Task<bool> CreateAsync(User data);
+        Task<bool> CreateAsync(Cities data);
         /// <summary>
-        /// Crea una User
+        /// Crea una Cities
         /// </summary>
         /// <param name="data"></param>
-        /// <returns>Retorna el ID de la User</returns>
-        Task<bool> UpdateAsync(int id, User data);
+        /// <returns>Retorna el ID de la Cities</returns>
+        Task<bool> UpdateAsync(int id, Cities data);
         /// <summary>
-        /// Actualiza una User mediante el Id insertado
+        /// Actualiza una Cities mediante el Id insertado
         /// </summary>
         /// <param name="id"></param>
         /// <param name="data"></param>
         /// <returns>Retorna un true si la información se actualizo correctamente</returns>
+
+
     }
 }

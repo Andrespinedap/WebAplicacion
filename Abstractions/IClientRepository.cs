@@ -9,16 +9,16 @@ namespace WebAplicacion.Abstractions
     {
         ICollection<Client> GetUsers();
         //Llamar el Modelo de datos
-
+      
         Task<Client> FindAsync(int id);
         /// <summary>
-        /// Consulta una Client por Id
+        /// Consulta un Client por Id
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Retorna los datos de dicha Client</returns>
         Task<List<Client>> AllAsync();
         /// <summary>
-        /// Consulta todas las Clients
+        /// Consulta todos los Clients
         /// </summary>
         /// <returns>Retorna una lista de Clients</returns>
         Task<bool> CreateAsync(Client data);
