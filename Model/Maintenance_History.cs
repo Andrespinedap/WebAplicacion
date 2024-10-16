@@ -9,5 +9,6 @@ namespace WebAplicacion.Model
         public Order Order { get; set; }
         public ComentariosClientes ComentariosClientes { get; set; }
         public Vehicle Vehicle { get; set; }
+        //public ICollection<ComentariosClientes> ComentariosXcliente { get; } = new List<ComentariosClientes>();
     }
 }

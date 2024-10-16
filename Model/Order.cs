@@ -13,7 +13,6 @@ namespace WebAplicacion.Model
         public Services_Orders ServicesOrders { get; set;}
         public Maintenance_History MaintenanceHistory { get; set;}
         public Vehicle Vehicle { get; set;}
-        public Inventory_Orders InventoryOrders { get; set;}
-        public List<Maintenance_History> MaintenanceXhistory { get; set; } = [];
+        public Inventory_Orders InventoryOrders { get; set; }
     }
 }

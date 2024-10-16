@@ -1,16 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using WebAplicacion.Abstractions;
 using WebAplicacion.Context;
 using WebAplicacion.Model;
 
 namespace WebAplicacion.Repositories
 {
-    public class ClientRepository: IClientRepository
+    public class ClientRepository : IClientRepository
     {
         /// <summary>
-        /// Servicio que implementa la conexió con la base de datos
+        /// Servicio que implementa la conexión con la base de datos
         /// </summary>
-        public readonly TestDbContext context;
+        public readonly TestDbContext _context;
 
         /// <summary>
         /// Constructor de la clase <see cref="ClientRepository"/>
@@ -18,7 +18,7 @@ namespace WebAplicacion.Repositories
         /// <param name="context"></param>
         public ClientRepository(TestDbContext context)
         {
-            this.context = context;
+            _context = context;
         }
         /// <summary>
         /// Consulta una Client por Id
@@ -27,7 +27,7 @@ namespace WebAplicacion.Repositories
         /// <returns>Retorna una Client</returns>
         public async Task<Client> FindAsync(int id)
         {
-            return await this.context.Clients.FindAsync(id);
+            return await _context.Clients.FindAsync(id);
         }
         /// <summary>
         /// Obtiene todas las Clients
@@ -35,7 +35,7 @@ namespace WebAplicacion.Repositories
         /// <returns>Retorna toda la data de las Clients</returns>
         public Task<List<Client>> AllAsync()
         {
-            return this.context.Clients.ToListAsync();
+            return _context.Clients.ToListAsync();
         }
 
         /// <summary>
@@ -51,10 +51,10 @@ namespace WebAplicacion.Repositories
                 return false; // Retornar false si los datos son nulos
             }
 
-            await this.context.Clients.AddAsync(data);
+            await _context.Clients.AddAsync(data);
 
             // Intentar guardar los cambios y obtener el número de registros afectados
-            var result = await this.context.SaveChangesAsync();
+            var result = await _context.SaveChangesAsync();
 
             if (result > 0)
             {
@@ -73,7 +73,7 @@ namespace WebAplicacion.Repositories
         {
             try
             {
-                var entity = await this.context.Clients.FindAsync(id);
+                var entity = await _context.Clients.FindAsync(id);
                 if (entity != null)
                 {
                     entity.Name = data.Name;
@@ -81,9 +81,9 @@ namespace WebAplicacion.Repositories
                     entity.Email = data.Email;
                     entity.Direccion = data.Direccion;
 
-                    this.context.Update(entity);
+                    _context.Update(entity);
 
-                    return (await this.context.SaveChangesAsync()) > 0;
+                    return (await _context.SaveChangesAsync()) > 0;
                 }
                 return false;
 
@@ -94,12 +94,6 @@ namespace WebAplicacion.Repositories
                 throw new InvalidOperationException( "Ha ocurrido un error: " + err);
             }
         }
-
-        public ICollection<Client> GetClients()
-        {
-            throw new NotImplementedException();
-        }
-
         public ICollection<Client> GetUsers()
         {
             throw new NotImplementedException();
