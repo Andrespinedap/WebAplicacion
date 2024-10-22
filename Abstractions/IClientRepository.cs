@@ -10,7 +10,7 @@ namespace WebAplicacion.Abstractions
         ICollection<Client> GetUsers();
         Task<Client> FindAsync(int id);
         /// <summary>
-        /// Consulta un Client por Id
+        /// Consulta una Client por Id
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Retorna los datos de dicha Client</returns>
