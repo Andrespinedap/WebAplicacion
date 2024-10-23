@@ -94,7 +94,6 @@ namespace WebAplicacion.Repositories
                 throw new InvalidOperationException( "Ha ocurrido un error: " + err);
             }
         }
-
         public ICollection<Client> GetUsers()
         {
             throw new NotImplementedException();

@@ -1,29 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WebAplicacion.Abstractions;
-using WebAplicacion.Interfaces;
-using WebAplicacion.Model;
 
-namespace WebAplicacion.Controllers
-{
-    [ApiController]
-    [Route("api/[controller]")]
-    public class UserController : Controller
-    {
-
-        private readonly IUserRepository repository;
-
-        private readonly IUserRepository _userRepository;
-
+        /// <summary>
+        /// Implementa los metodos de comunicación para interactuar con la base de datos
+        /// </summary>
+        private readonly IClientRepository repository;
         /// <summary>
         /// Logger para registrar en consola algun error o estados success
         /// </summary>
-        private readonly ILogger<UserController> logger;
+        private readonly ILogger<ClientController> logger;
 
         /// <summary>
-        /// Constructor para la clase <see cref="UserController"/>
+        /// Constructor para la clase <see cref="ClientController"/>
         /// </summary>
         /// <param name="repository"></param>
-        public UserController(IUserRepository repository, ILogger<UserController> logger)
+        public ClientController(IClientRepository repository, ILogger<ClientController> logger)
         {
             this.repository = repository;
             this.logger = logger;
@@ -75,7 +64,7 @@ namespace WebAplicacion.Controllers
             return Ok(result);
         }
         /// <summary>
-        /// Servicio encargado de crear una User
+        /// Servicio encargado de crear una Client
         /// </summary>
         /// <param name="data"></param>
         /// <returns>Retorna el Id de la compañia</returns>
@@ -83,7 +72,7 @@ namespace WebAplicacion.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Create(User data)
+        public async Task<IActionResult> Create(Client data)
         {
             // Validamos que la data no sea nula
             if (data == null)
@@ -112,7 +101,7 @@ namespace WebAplicacion.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update(int id, User data)
+        public async Task<IActionResult> Update(int id, Client data)
         {
             if (id < 0)
                 return NotFound("id is not valid");
@@ -132,5 +121,3 @@ namespace WebAplicacion.Controllers
 
             return Ok(success);
         }
-    }
-}
