@@ -20,22 +20,12 @@ namespace WebAplicacion.Repositories
             throw new NotImplementedException();
         }
 
-        public ICollection<UsersHistory> GetUserHistories()
-        {
-            throw new NotImplementedException();
-        }
-
-        public object GetUserHistory(int userHistoryid)
+        public ICollection<UsersHistory> GetOrders()
         {
             throw new NotImplementedException();
         }
 
         public Task<bool> UpdateAsync(int id, UsersHistory data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool UserHistoryExits(int UserHistoryid)
         {
             throw new NotImplementedException();
         }

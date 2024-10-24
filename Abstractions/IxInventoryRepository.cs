@@ -4,7 +4,7 @@ namespace WebAplicacion.Abstractions
 {
     public interface IxInventoryRepository
     {
-        ICollection<Inventory> GetOrders();
+        ICollection<Inventory> GetInventory();
         Task<Inventory> FindAsync(int id);
         /// <summary>
         /// Consulta un Inventory por Id
