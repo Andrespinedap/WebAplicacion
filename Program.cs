@@ -14,6 +14,15 @@ var conString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<TestDbContext>(options => options.UseSqlServer(conString));
 
 //Conexiones de Repositorios y Controllers
+builder.Services.AddScoped<ICitiesRepository, CitiesRepository>();
+builder.Services.AddScoped<IComentariosClientesRepository, ComentariosClientesRepository>();
+builder.Services.AddScoped<IBuysRepository, BuysRepository>();
+builder.Services.AddScoped<IxInventoryRepository, InventoryRepository>();
+builder.Services.AddScoped<IPaymentsRepository, PaymentsRepository>();
+builder.Services.AddScoped<IServicesRepository, ServicesRepository>();
+builder.Services.AddScoped<ISuppliersRepository, SuppliersRepository>();
+builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
+builder.Services.AddScoped<IDatesRepository, DatesRepository>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 

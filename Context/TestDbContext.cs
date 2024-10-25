@@ -268,10 +268,10 @@ namespace WebAplicacion.Context
         public DbSet<ComentariosClientes> ComentariosClientes { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Dates> Dates { get; set; }
-        public DbSet<Buys> Shopping { get; set; }
+        public DbSet<Buys> Buys { get; set; }
         public DbSet<Inventory_purchase> Purchasing_inventory { get; set; }
         public DbSet<Employee> Employees { get; set; }
-        public DbSet<Maintenance_History> Maintenance_stories { get; set; }
+        public DbSet<Maintenance_History> Maintenance_History { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Inventory_Orders> Inventories_Orders { get; set; }
@@ -279,5 +279,7 @@ namespace WebAplicacion.Context
         public DbSet<Payments> Payments { get; set; }
         public DbSet<Suppliers> Suppliers { get; set; }
         public DbSet<Services> Services { get; set; }
+        public DbSet<Cities> Cities { get; set; }
+        public DbSet<Vehicle> Vehicles { get; set; }
     }
 }
