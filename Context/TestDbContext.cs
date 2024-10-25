@@ -279,5 +279,7 @@ namespace WebAplicacion.Context
         public DbSet<Payments> Payments { get; set; }
         public DbSet<Suppliers> Suppliers { get; set; }
         public DbSet<Services> Services { get; set; }
+        public DbSet<Cities> Cities { get; set; }
+        public DbSet<Vehicle> Vehicles { get; set; }
     }
 }
