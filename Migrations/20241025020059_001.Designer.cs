@@ -12,8 +12,8 @@ using WebAplicacion.Context;
 namespace WebAplicacion.Migrations
 {
     [DbContext(typeof(TestDbContext))]
-    [Migration("20241008065742_FixCitiesVehicleRelation")]
-    partial class FixCitiesVehicleRelation
+    [Migration("20241025020059_001")]
+    partial class _001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -474,11 +474,11 @@ namespace WebAplicacion.Migrations
 
                     b.Property<string>("Modified")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(16)");
 
                     b.Property<string>("ModifiedBy")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(16)");
 
                     b.Property<string>("Name")
                         .IsRequired()

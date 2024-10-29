@@ -130,5 +130,13 @@ namespace WebAplicacion.Controllers
 
             return Ok(success);
         }
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteService(int id)
+        {
+            await repository.DeleteAsync(id);
+            return NoContent();
+        }
     }
 }

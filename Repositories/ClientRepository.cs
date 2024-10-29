@@ -7,96 +7,60 @@ namespace WebAplicacion.Repositories
 {
     public class ClientRepository : IClientRepository
     {
-        /// <summary>
-        /// Servicio que implementa la conexión con la base de datos
-        /// </summary>
-        public readonly TestDbContext _context;
+        private readonly TestDbContext _context;
 
-        /// <summary>
-        /// Constructor de la clase <see cref="ClientRepository"/>
-        /// </summary>
-        /// <param name="context"></param>
-        public ClientRepository(TestDbContext context)
+        public ClientRepository(TestDbContext context) 
         {
             _context = context;
         }
-        /// <summary>
-        /// Consulta una Client por Id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>Retorna una Client</returns>
-        public async Task<Client> FindAsync(int id)
+        public async Task<Client> CreateClientAsync(Client client)
         {
-            return await _context.Clients.FindAsync(id);
-        }
-        /// <summary>
-        /// Obtiene todas las Clients
-        /// </summary>
-        /// <returns>Retorna toda la data de las Clients</returns>
-        public Task<List<Client>> AllAsync()
-        {
-            return _context.Clients.ToListAsync();
+            _context.Clients.Add(client);
+            await _context.SaveChangesAsync();
+            return client;
         }
 
-        /// <summary>
-        /// Crea una Client
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns>Retorna el id de la Client creada</returns>
-        public async Task<bool> CreateAsync(Client data)
+        public async Task DeleteClientAsync(int id)
         {
-            // Verificar si los datos son válidos
-            if (data == null)
+            var client = await _context.Clients.FindAsync(id);
+            if (client != null)
             {
-                return false; // Retornar false si los datos son nulos
+                _context.Clients.Remove(client);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.Clients.AddAsync(data);
-
-            // Intentar guardar los cambios y obtener el número de registros afectados
-            var result = await _context.SaveChangesAsync();
-
-            if (result > 0)
-            {
-                return true;
-            }
-            else { return false; }
         }
 
-        /// <summary>
-        /// Actualiza los datos de una Client
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="data"></param>
-        /// <returns>Retorna true cuando la actualización es satisfactoria, de lo contrario retorna false</returns>
-        public async Task<bool> UpdateAsync(int id, Client data)
+        public async Task<IEnumerable<Client>> GetAllClientAsync()
         {
-            try
-            {
-                var entity = await _context.Clients.FindAsync(id);
-                if (entity != null)
-                {
-                    entity.Name = data.Name;
-                    entity.Telefono = data.Telefono;
-                    entity.Email = data.Email;
-                    entity.Direccion = data.Direccion;
-
-                    _context.Update(entity);
-
-                    return (await _context.SaveChangesAsync()) > 0;
-                }
-                return false;
-
-            }
-            catch (Exception err)
-            {
-
-                throw new InvalidOperationException( "Ha ocurrido un error: " + err);
-            }
+            return await _context.Clients.ToListAsync();
         }
-        public ICollection<Client> GetUsers()
+
+        public async Task<Client> GetClientAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Clients.FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        public async Task<Client> UpdateClientAsync(Client client)
+        {
+            var existingClient = await _context.Clients.FindAsync(client.Id);
+
+            if (existingClient == null)
+            {
+                throw new NotFoundException("User not found");
+            }
+
+            // Actualiza las propiedades según sea necesario
+            existingClient.Name = client.Name;
+            existingClient.Direccion = client.Direccion;
+            existingClient.Email = client.Email;
+            existingClient.Telefono = client.Telefono;
+            existingClient.ComentariosCliente = client.ComentariosCliente;
+            existingClient.Cities = client.Cities;
+
+            _context.Entry(existingClient).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return existingClient;
         }
     }
 }

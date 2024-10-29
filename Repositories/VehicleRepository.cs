@@ -1,102 +1,60 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebAplicacion.Abstractions;
 using WebAplicacion.Context;
 using WebAplicacion.Model;
 
 namespace WebAplicacion.Repositories
 {
-    public class VehicleRepository
+    public class VehicleRepository : IVehicleRepository
     {
-        /// <summary>
-        /// Servicio que implementa la conexión con la base de datos
-        /// </summary>
-        public readonly TestDbContext _context;
+        private readonly TestDbContext _context;
 
-        /// <summary>
-        /// Constructor de la clase <see cref="VehicleRepository"/>
-        /// </summary>
-        /// <param name="context"></param>
         public VehicleRepository(TestDbContext context)
         {
             _context = context;
         }
-        /// <summary>
-        /// Consulta una Vehicle por Id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>Retorna una Vehicle</returns>
-        public async Task<Vehicle> FindAsync(int id)
+        public async Task<IEnumerable<Vehicle>> GetAllVehiclesAsync()
         {
-            return await _context.Vehicles.FindAsync(id);
+            return await _context.Vehicles.ToListAsync();
         }
-        /// <summary>
-        /// Obtiene todas las Vehicles
-        /// </summary>
-        /// <returns>Retorna toda la data de las Vehicles</returns>
-        public Task<List<Vehicle>> AllAsync()
+        public async Task<Vehicle> CreateVehicleAsync(Vehicle vehicle)
         {
-            return _context.Vehicles.ToListAsync();
+            _context.Vehicles.Add(vehicle);
+            await _context.SaveChangesAsync();
+            return vehicle;
         }
-
-        /// <summary>
-        /// Crea una Vehicle
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns>Retorna el id de la Vehicle creada</returns>
-        public async Task<bool> CreateAsync(Vehicle data)
+        public async Task<Vehicle> GetVehicleByIdAsync(int id)
         {
-            // Verificar si los datos son válidos
-            if (data == null)
-            {
-                return false; // Retornar false si los datos son nulos
-            }
-
-            await _context.Vehicles.AddAsync(data);
-
-            // Intentar guardar los cambios y obtener el número de registros afectados
-            var result = await _context.SaveChangesAsync();
-
-            if (result > 0)
-            {
-                return true;
-            }
-            else { return false; }
+            return await _context.Vehicles.FirstOrDefaultAsync(c => c.Id == id);
         }
-
-        /// <summary>
-        /// Actualiza los datos de una Vehicle
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="data"></param>
-        /// <returns>Retorna true cuando la actualización es satisfactoria, de lo contrario retorna false</returns>
-        public async Task<bool> UpdateAsync(int id, Vehicle data)
+        public async Task DeleteVehicleAsync(int id)
         {
-            try
+            var vehicle = await _context.Vehicles.FindAsync(id);
+            if (vehicle != null)
             {
-                var entity = await _context.Vehicles.FindAsync(id);
-                if (entity != null)
-                {
-                    entity.Client_Id = id;
-                    entity.Brand = data.Brand;
-                    entity.Model = data.Model;
-                    entity.Year = data.Year;
-                    entity.Plate = data.Plate;
-                    entity.Order = data.Order;
-                    _context.Update(entity);
-
-                    return (await _context.SaveChangesAsync()) > 0;
-                }
-                return false;
-
-            }
-            catch (Exception err)
-            {
-
-                throw new InvalidOperationException("Ha ocurrido un error: " + err);
+                _context.Vehicles.Remove(vehicle);
+                await _context.SaveChangesAsync();
             }
         }
-        public ICollection<Vehicle> GetVehicle()
+        public async Task<Vehicle> UpdateVehicleAsync(Vehicle vehicle)
         {
-            throw new NotImplementedException();
+            var existingvehicle = await _context.Vehicles.FindAsync(vehicle.Id);
+
+            if (existingvehicle == null)
+            {
+                throw new NotFoundException("Vehicle not found");
+            }
+
+            // Actualiza las propiedades según sea necesario
+            existingvehicle.Brand = vehicle.Brand;
+            existingvehicle.Model = vehicle.Model;
+            existingvehicle.Year = vehicle.Year;
+            existingvehicle.Plate = vehicle.Plate;
+
+            _context.Entry(existingvehicle).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return existingvehicle;
         }
     }
 }

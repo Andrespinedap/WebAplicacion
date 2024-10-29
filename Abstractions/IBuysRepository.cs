@@ -29,5 +29,6 @@ namespace WebAplicacion.Abstractions
         /// <param name="id"></param>
         /// <param name="data"></param>
         /// <returns>Retorna un true si la información se actualizo correctamente</returns>
+        ICollection<Suppliers> GetBuysBySuppliers(int buysId);
     }
 }

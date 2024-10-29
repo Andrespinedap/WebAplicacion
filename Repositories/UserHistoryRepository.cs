@@ -1,33 +1,64 @@
-﻿using WebAplicacion.Abstractions;
+﻿using Microsoft.EntityFrameworkCore;
+using WebAplicacion.Interfaces;
+using WebAplicacion.Context;
 using WebAplicacion.Model;
 
 namespace WebAplicacion.Repositories
 {
     public class UserHistoryRepository : IUserHistoryRepository
     {
-        public Task<List<UsersHistory>> AllAsync()
+        private readonly TestDbContext _context;
+
+        public UserHistoryRepository(TestDbContext context) 
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+        public async Task<UsersHistory> CreateUserHistoryAsync(UsersHistory userHistory)
+        {
+            _context.UsersHistory.Add(userHistory);
+            await _context.SaveChangesAsync();
+            return userHistory;
         }
 
-        public Task<bool> CreateAsync(UsersHistory data)
+        public async Task DeleteUserHistoryAsync(int id)
         {
-            throw new NotImplementedException();
+            var usersHistory = await _context.UsersHistory.FindAsync(id);
+            if (usersHistory != null)
+            {
+                _context.UsersHistory.Remove(usersHistory);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public Task<UsersHistory> FindAsync(int id)
+        public async Task<IEnumerable<UsersHistory>> GetAllUserHistoryAsync()
         {
-            throw new NotImplementedException();
+            return await _context.UsersHistory.ToListAsync();
         }
 
-        public ICollection<UsersHistory> GetOrders()
+        public async Task<UsersHistory> GetUserHistoryByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.UsersHistory.FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public Task<bool> UpdateAsync(int id, UsersHistory data)
+        public async Task<UsersHistory> UpdateUserHistoryAsync(UsersHistory userHistory)
         {
-            throw new NotImplementedException();
+            var existingUserHistory = await _context.UsersHistory.FindAsync(userHistory.Id);
+
+            if (existingUserHistory == null)
+            {
+                throw new NotFoundException("User not found");
+            }
+
+            // Actualiza las propiedades según sea necesario
+            existingUserHistory.Datecreate = userHistory.Datecreate;
+            existingUserHistory.Modified = userHistory.Modified;
+            existingUserHistory.ModifiedBy = userHistory.ModifiedBy;
+            existingUserHistory.Datemodified = userHistory.Datemodified;
+
+            _context.Entry(existingUserHistory).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return existingUserHistory;
         }
     }
 }

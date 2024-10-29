@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebAplicacion.Migrations
 {
     /// <inheritdoc />
-    public partial class FixCitiesVehicleRelation : Migration
+    public partial class _001 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,8 +23,8 @@ namespace WebAplicacion.Migrations
                     Password = table.Column<string>(type: "varchar(255)", nullable: false),
                     PhoneNumber = table.Column<string>(type: "varchar(16)", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime", nullable: false),
-                    Modified = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Modified = table.Column<string>(type: "varchar(16)", nullable: false),
+                    ModifiedBy = table.Column<string>(type: "varchar(16)", nullable: false)
                 },
                 constraints: table =>
                 {

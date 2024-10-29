@@ -79,6 +79,7 @@ namespace WebAplicacion.Repositories
                     entity.Name = data.Name;
                     entity.Contacts = data.Contacts;
                     entity.Address = data.Address;
+                    entity.Buys = data.Buys;
                     _context.Update(entity);
 
                     return (await _context.SaveChangesAsync()) > 0;
@@ -94,7 +95,17 @@ namespace WebAplicacion.Repositories
         }
         public ICollection<Suppliers> GetSuppliers()
         {
-            throw new NotImplementedException();
+            return _context.Suppliers.ToList();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var data = await _context.Suppliers.FindAsync(id);
+            if (data != null)
+            {
+                _context.Suppliers.Remove(data);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }
