@@ -1,4 +1,5 @@
-﻿using WebAplicacion.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using WebAplicacion.Context;
 using WebAplicacion.Interfaces;
 using WebAplicacion.Model;
 
@@ -13,55 +14,62 @@ namespace WebAplicacion.Repositories
         {
             _context = context;
         }
-
-        public Task<List<User>> AllAsync()
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Users.ToListAsync();
+
+        }
+        public async Task<User> CreateUserAsync(User user)
+        {
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+            return user;
+            
+        }
+        public async Task<User> GetUserByIdAsync(int id)
+        {
+            return await _context.Users.FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public Task<bool> CreateAsync(User data)
+        public async Task SoftDeleteUserAsync(int id)
         {
-            throw new NotImplementedException();
+            var user = await _context.Users.FindAsync(id);
+            if (user != null)
+            {
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public Task<User> FindAsync(int id)
+        public async Task<User> UpdateUserAsync(User user)
         {
-            throw new NotImplementedException();
+            var existingUser = await _context.Users.FindAsync(user.Id);
+
+            if (existingUser == null)
+            {
+                throw new NotFoundException("User not found");
+            }
+
+            // Actualiza las propiedades según sea necesario
+            existingUser.Name = user.Name;
+            existingUser.Email = user.Email;
+            existingUser.Password = user.Password;
+            existingUser.PhoneNumber = user.PhoneNumber;
+            existingUser.Date = user.Date;
+            existingUser.Modified = user.Modified;
+            existingUser.ModifiedBy = user.ModifiedBy;
+
+            _context.Entry(existingUser).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return existingUser;
         }
 
-        public User GetUser(int id)
+        public async Task<User> GetLoginUser(string email, string password)
         {
-            return _context.Users.Where(p => p.Id == id).FirstOrDefault();
-        }
-
-        public ICollection<User>GetUsers()
-        {
-            return _context.Users.OrderBy(x => x.Id).ToList();
-        }
-
-        public Task<bool> UpdateAsync(int id, User data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public User UserByEmail(string email)
-        {
-            throw new NotImplementedException();
-        }
-
-        public User UserByPassword(string password)
-        {
-            throw new NotImplementedException();
-        }
-
-        public User UserByUsername(string username)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool UserExits(int Userid)
-        {
-            return _context.Users.Any(p => p.Id == Userid);
+            return await _context.Users
+            .FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
         }
     }
 }
+

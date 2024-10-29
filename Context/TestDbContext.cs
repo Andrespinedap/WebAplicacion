@@ -28,6 +28,8 @@ namespace WebAplicacion.Context
             user.Property(u => u.Email).HasColumnType("varchar(255)").IsRequired();
             user.Property(u => u.Password).HasColumnType("varchar(255)").IsRequired();
             user.Property(u => u.PhoneNumber).HasColumnType("varchar(16)").IsRequired();
+            user.Property(u => u.Modified).HasColumnType("varchar(16)").IsRequired();
+            user.Property(u => u.ModifiedBy).HasColumnType("varchar(16)").IsRequired();
             user.Property(u => u.Date).HasColumnType("datetime").IsRequired();
 
             //EntityConfiguration para user
@@ -264,7 +266,7 @@ namespace WebAplicacion.Context
         }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<User> UsersHistory { get; set; }
+        public DbSet<UsersHistory> UsersHistory { get; set; }
         public DbSet<ComentariosClientes> ComentariosClientes { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Dates> Dates { get; set; }

@@ -96,5 +96,15 @@ namespace WebAplicacion.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public async Task DeleteAsync(int id)
+        {
+            var entity = await _context.Services.FindAsync(id);
+            if (entity != null)
+            {
+                _context.Services.Remove(entity);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

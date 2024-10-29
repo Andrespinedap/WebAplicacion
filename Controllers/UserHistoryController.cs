@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using WebAplicacion.Abstractions;
+using WebAplicacion.Interfaces;
 using WebAplicacion.Model;
+using WebAplicacion.Repositories;
 
 namespace WebAplicacion.Controllers
 {
@@ -10,127 +12,68 @@ namespace WebAplicacion.Controllers
     [Route("api/[controller]")]
     public class UserHistoryController : ControllerBase
     {
-        /// <summary>
-        /// Implementa los metodos de comunicación para interactuar con la base de datos
-        /// </summary>
-        private readonly IUserHistoryRepository repository;
-        /// <summary>
-        /// Logger para registrar en consola algun error o estados success
-        /// </summary>
-        private readonly ILogger<UserHistoryController> logger;
-
-        /// <summary>
-        /// Constructor para la clase <see cref="UserHistoryController"/>
-        /// </summary>
-        /// <param name="repository"></param>
-        public UserHistoryController(IUserHistoryRepository repository, ILogger<UserHistoryController> logger)
+        private readonly IUserHistoryRepository _userHistoryRepository;
+        public UserHistoryController(IUserHistoryRepository userHistoryRepository)
         {
-            this.repository = repository;
-            this.logger = logger;
+            _userHistoryRepository = userHistoryRepository;
         }
-
-        /// <summary>
-        /// Servicio encargado de consultar todos los registros
-        /// </summary>
-        /// <returns>Retorna todos los registros</returns>
-        [HttpGet]
-        [Route("[action]")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> all()
-        {
-            // Asigmnamos la información consultada a una variable
-            var data = await this.repository.AllAsync();
-
-            this.logger.LogDebug("Consultando todos los {registros}", data);
-
-            // Validamos que la data no se null o de otro tipo
-            if (data == null || !data.Any())
-            {
-                return NotFound("No records found.");
-            }
-
-            return Ok(data);
-
-        }
-        /// <summary>
-        /// Servicio encargado de consultar un registro
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("[action]/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Find(int id)
-        {
-            //Validamos que el id no sea menor a 0
-            if (id < 0)
-                return NotFound("Arguments invalids");
-
-            //Retornamos la el resultado de la busqueda
-            var result = await repository.FindAsync(id);
-            return Ok(result);
-        }
-        /// <summary>
-        /// Servicio encargado de crear una UserHistory
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns>Retorna el Id de la compañia</returns>
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Create(UsersHistory data)
-        {
-            // Validamos que la data no sea nula
-            if (data == null)
-                return NotFound("Arguments invalids");
-
-            // Creamos una compañia
-            var dataCreate = await this.repository.CreateAsync(data);
-
-            // Verifica si la creación fue exitosa (si la creación retorna algún valor que indique éxito)
-            if (!dataCreate)
-            {
-                return NotFound("Failed to create the record");
-            }
-
-            this.logger.LogDebug("Creando registro - [Data: {data}]", data);
-            return Ok(dataCreate);
-        }
-        /// <summary>
-        /// Servicio encargado de la actualización de un registro
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="data"></param>
-        /// <returns>Retorna true si fue exitoso de lo contrario un false</returns>
-        [HttpPut]
-        [Route("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update(int id, UsersHistory data)
-        {
-            if (id < 0)
-                return NotFound("id is not valid");
-            if (data == null)
-                return NotFound("Data is not valid");
-
-            var success = await repository.UpdateAsync(id, data);
-
-            // Registra la información de la actualización
-            this.logger.LogDebug("Actualizando registro - [Id: {Id}, Success: {Success}, Data: {Data}]", id, success, data);
-
-            // Devuelve el resultado de la actualización
-            if (!success)
-            {
-                return NotFound("Record not found or could not be updated");
-            }
-
-            return Ok(success);
-        }
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<UsersHistory>>> GetAllUserHistory()
+    {
+        var userHistory = await _userHistoryRepository.GetAllUserHistoryAsync();
+        return Ok(userHistory);
     }
+    [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<UsersHistory>> GetUserGetUserHistoryById(int id)
+    {
+        var userHistory = await _userHistoryRepository.GetUserHistoryByIdAsync(id);
+        if (userHistory == null)
+        {
+            return NotFound();
+        }
+        return Ok(userHistory);
+    }
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<UsersHistory>> CreateUserHistory([FromBody] UsersHistory userHistory)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        
+        }
+        var newuserHistory = await _userHistoryRepository.CreateUserHistoryAsync(userHistory);
+        return CreatedAtAction(nameof(GetUserGetUserHistoryById), new { id = newuserHistory.Id }, newuserHistory);
+    }
+    [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateUserHistory(int id, [FromBody] UsersHistory userHistory)
+    {
+        if (ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        var updateUserHistory = await _userHistoryRepository.UpdateUserHistoryAsync(userHistory);
+        if (updateUserHistory == null)
+        {
+                return NotFound();
+        }
+        return NoContent();
+    }
+    
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task <IActionResult> DeleteUserHistory(int id)
+    {
+        await _userHistoryRepository.DeleteUserHistoryAsync(id);
+        return NoContent();
+    }
+  }
 }

@@ -471,11 +471,11 @@ namespace WebAplicacion.Migrations
 
                     b.Property<string>("Modified")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(16)");
 
                     b.Property<string>("ModifiedBy")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("varchar(16)");
 
                     b.Property<string>("Name")
                         .IsRequired()

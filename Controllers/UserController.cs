@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WebAplicacion.Abstractions;
+﻿using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using WebAplicacion.Interfaces;
 using WebAplicacion.Model;
 
@@ -7,130 +11,133 @@ namespace WebAplicacion.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController : Controller
+    public class UserController : ControllerBase
     {
-
-        private readonly IUserRepository repository;
-
         private readonly IUserRepository _userRepository;
+        private readonly IConfiguration _configuration;
 
-        /// <summary>
-        /// Logger para registrar en consola algun error o estados success
-        /// </summary>
-        private readonly ILogger<UserController> logger;
-
-        /// <summary>
-        /// Constructor para la clase <see cref="UserController"/>
-        /// </summary>
-        /// <param name="repository"></param>
-        public UserController(IUserRepository repository, ILogger<UserController> logger)
+        public UserController(IUserRepository userRepository, IConfiguration configuration)
         {
-            this.repository = repository;
-            this.logger = logger;
+            _userRepository = userRepository;
+            _configuration = configuration;
         }
 
-        /// <summary>
-        /// Servicio encargado de consultar todos los registros
-        /// </summary>
-        /// <returns>Retorna todos los registros</returns>
         [HttpGet]
-        [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
+        {
+            var users = await _userRepository.GetAllUsersAsync();
+            return Ok(users);
+        }
+
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> all()
+        public async Task<ActionResult<User>> GetUserById(int id)
         {
-            // Asigmnamos la información consultada a una variable
-            var data = await this.repository.AllAsync();
-
-            this.logger.LogDebug("Consultando todos los {registros}", data);
-
-            // Validamos que la data no se null o de otro tipo
-            if (data == null || !data.Any())
+            var user = await _userRepository.GetUserByIdAsync(id);
+            if (user == null)
             {
-                return NotFound("No records found.");
+                return NotFound();
             }
-
-            return Ok(data);
-
+            return Ok(user);
         }
-        /// <summary>
-        /// Servicio encargado de consultar un registro
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("[action]/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Find(int id)
-        {
-            //Validamos que el id no sea menor a 0
-            if (id < 0)
-                return NotFound("Arguments invalids");
 
-            //Retornamos la el resultado de la busqueda
-            var result = await repository.FindAsync(id);
-            return Ok(result);
-        }
-        /// <summary>
-        /// Servicio encargado de crear una User
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns>Retorna el Id de la compañia</returns>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Create(User data)
+        [Route("register")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<User>> CreateUser([FromBody] User user)
         {
-            // Validamos que la data no sea nula
-            if (data == null)
-                return NotFound("Arguments invalids");
-
-            // Creamos una compañia
-            var dataCreate = await this.repository.CreateAsync(data);
-
-            // Verifica si la creación fue exitosa (si la creación retorna algún valor que indique éxito)
-            if (!dataCreate)
+            if (!ModelState.IsValid)
             {
-                return NotFound("Failed to create the record");
+                return BadRequest(ModelState);
             }
 
-            this.logger.LogDebug("Creando registro - [Data: {data}]", data);
-            return Ok(dataCreate);
+            var newUser = await _userRepository.CreateUserAsync(user);
+            return CreatedAtAction(nameof(GetUserById), new { id = newUser.Id }, newUser);
         }
-        /// <summary>
-        /// Servicio encargado de la actualización de un registro
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="data"></param>
-        /// <returns>Retorna true si fue exitoso de lo contrario un false</returns>
-        [HttpPut]
-        [Route("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update(int id, User data)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] User user)
         {
-            if (id < 0)
-                return NotFound("id is not valid");
-            if (data == null)
-                return NotFound("Data is not valid");
-
-            var success = await repository.UpdateAsync(id, data);
-
-            // Registra la información de la actualización
-            this.logger.LogDebug("Actualizando registro - [Id: {Id}, Success: {Success}, Data: {Data}]", id, success, data);
-
-            // Devuelve el resultado de la actualización
-            if (!success)
+            if (!ModelState.IsValid)
             {
-                return NotFound("Record not found or could not be updated");
+                return BadRequest(ModelState);
             }
 
-            return Ok(success);
+            var updatedUser = await _userRepository.UpdateUserAsync(user);
+            if (updatedUser == null)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> SoftDeleteUser(int id)
+        {
+            await _userRepository.SoftDeleteUserAsync(id);
+            return NoContent();
+        }
+        [HttpPost]
+        [Route ("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest loginUser)
+        {
+            // Validar los campos requeridos
+            if (string.IsNullOrEmpty(loginUser.Email) || string.IsNullOrEmpty(loginUser.Password))
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Email y contraseña son obligatorios."
+                });
+            }
+
+            // Verificar las credenciales
+            var user = await _userRepository.GetLoginUser(loginUser.Email, loginUser.Password);
+
+            if (user == null)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Credenciales incorrectas."
+                });
+            }
+
+            // Generar token JWT
+            var jwt = _configuration.GetSection("Jwt").Get<Jwt>();
+            var claims = new[]
+            {
+            new Claim(JwtRegisteredClaimNames.Sub, jwt.Subject),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim (JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+            new Claim("id", user.Id.ToString()),
+            new Claim("email", user.Email)
+        };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key));
+            var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var token = new JwtSecurityToken(
+                jwt.Issuer,
+                jwt.Audience,
+                claims,
+                expires: DateTime.Now.AddMinutes(20),
+                signingCredentials: signIn
+            );
+
+            return Ok(new
+            {
+                success = true,
+                message = "Inicio de sesión exitoso.",
+                token = new JwtSecurityTokenHandler().WriteToken(token)
+            });
         }
     }
 }

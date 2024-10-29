@@ -77,7 +77,7 @@ namespace WebAplicacion.Repositories
                 if (entity != null)
                 {
                     entity.Supplier_Id = id;
-                    entity.Date = DateTime.Now;
+                    entity.Date = data.Date;
                     entity.Total = data.Total;
                     _context.Update(entity);
 
@@ -94,7 +94,12 @@ namespace WebAplicacion.Repositories
         }
         public ICollection<Buys> GetBuys()
         {
-            throw new NotImplementedException();
+            return _context.Buys.ToList();
+        }
+
+        public ICollection<Suppliers> GetBuysBySuppliers(int buysId)
+        {
+            return _context.Suppliers.Where(e => e.Id == buysId).ToList();
         }
     }
 }
