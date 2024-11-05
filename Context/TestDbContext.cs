@@ -1,8 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
-using System.Collections.Generic;
 using WebAplicacion.Model;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WebAplicacion.Context
 {
@@ -28,9 +25,8 @@ namespace WebAplicacion.Context
             user.Property(u => u.Email).HasColumnType("varchar(255)").IsRequired();
             user.Property(u => u.Password).HasColumnType("varchar(255)").IsRequired();
             user.Property(u => u.PhoneNumber).HasColumnType("varchar(16)").IsRequired();
-            user.Property(u => u.Modified).HasColumnType("varchar(16)").IsRequired();
-            user.Property(u => u.ModifiedBy).HasColumnType("varchar(16)").IsRequired();
             user.Property(u => u.Date).HasColumnType("datetime").IsRequired();
+            
 
             //EntityConfiguration para user
             var UsersHistory = modelBuilder.Entity<UsersHistory>();
@@ -40,8 +36,6 @@ namespace WebAplicacion.Context
             UsersHistory.HasKey(u => u.Id);
             UsersHistory.Property(u => u.User).HasColumnType("varchar(255)").IsRequired();
             UsersHistory.Property(u => u.Datecreate).HasColumnType("datetime").IsRequired();
-            UsersHistory.Property(u => u.Modified).HasColumnType("varchar(255)").IsRequired();
-            UsersHistory.Property(u => u.ModifiedBy).HasColumnType("varchar(255)").IsRequired();
             UsersHistory.Property(u => u.Datemodified).HasColumnType("datetime").IsRequired();
 
             // Asignamos el modelbuilder para la creación de la tabla y sus propiedades
@@ -57,7 +51,6 @@ namespace WebAplicacion.Context
 
             //Mapeo de relaciones Relacion de uno a muchos
             client.HasMany(x => x.Vehicles).WithOne(x => x.Client).HasForeignKey(x => x.Client_Id).OnDelete(DeleteBehavior.NoAction); // un cliente tiene muchos vehiculos
-            //client.HasMany(x => x.ComentariosXcliente).WithOne(x => x.Client).HasForeignKey(x => x.Client_Id).OnDelete(DeleteBehavior.NoAction); // un cliente puede tener varios comentarios
 
             //EntityConfiguration para ComentariosClientes
             var comentarioClient = modelBuilder.Entity<ComentariosClientes>();
@@ -146,7 +139,7 @@ namespace WebAplicacion.Context
             InventoryPurchase.HasOne(x => x.Buy).WithMany(x => x.InventoryXpurchase).HasForeignKey(x => x.Id).OnDelete(DeleteBehavior.NoAction);
 
             // Asignamos el modelbuilder para la creación de la tabla y sus propiedades
-            var services = modelBuilder.Entity<Services>();
+            var services = modelBuilder.Entity<Service>();
 
             // Nombre de la tabla / propiedades de los campos
             services.ToTable("Services");
@@ -261,7 +254,7 @@ namespace WebAplicacion.Context
             modelBuilder.Entity<Services_Orders>().HasKey(u => u.Id);
             modelBuilder.Entity<Payments>().HasKey(u => u.Id);
             modelBuilder.Entity<Suppliers>().HasKey(u => u.Id);
-            modelBuilder.Entity<Services>().HasKey(u => u.Id);
+            modelBuilder.Entity<Service>().HasKey(u => u.Id);
             modelBuilder.Entity<Vehicle>().HasKey(u => u.Id);
         }
 
@@ -280,7 +273,7 @@ namespace WebAplicacion.Context
         public DbSet<Services_Orders> Services_Orders { get; set; }
         public DbSet<Payments> Payments { get; set; }
         public DbSet<Suppliers> Suppliers { get; set; }
-        public DbSet<Services> Services { get; set; }
+        public DbSet<Service> Services { get; set; }
         public DbSet<Cities> Cities { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
     }

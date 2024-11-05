@@ -17,7 +17,7 @@ namespace WebAplicacion.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -371,7 +371,7 @@ namespace WebAplicacion.Migrations
                     b.ToTable("Payments", (string)null);
                 });
 
-            modelBuilder.Entity("WebAplicacion.Model.Services", b =>
+            modelBuilder.Entity("WebAplicacion.Model.Service", b =>
                 {
                     b.Property<int>("Id")
                         .HasColumnType("int");
@@ -465,17 +465,20 @@ namespace WebAplicacion.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("varchar(128)");
 
                     b.Property<string>("Modified")
                         .IsRequired()
-                        .HasColumnType("varchar(16)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ModifiedBy")
                         .IsRequired()
-                        .HasColumnType("varchar(16)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -489,7 +492,12 @@ namespace WebAplicacion.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(16)");
 
+                    b.Property<int>("UsertypeId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UsertypeId");
 
                     b.ToTable("User", (string)null);
                 });
@@ -508,14 +516,6 @@ namespace WebAplicacion.Migrations
                     b.Property<DateTime>("Datemodified")
                         .HasColumnType("datetime");
 
-                    b.Property<string>("Modified")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("ModifiedBy")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
                     b.Property<string>("User")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
@@ -523,6 +523,26 @@ namespace WebAplicacion.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UsersHistory", (string)null);
+                });
+
+            modelBuilder.Entity("WebAplicacion.Model.Usertype", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Usertype");
                 });
 
             modelBuilder.Entity("WebAplicacion.Model.Vehicle", b =>
@@ -763,7 +783,7 @@ namespace WebAplicacion.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("WebAplicacion.Model.Services", b =>
+            modelBuilder.Entity("WebAplicacion.Model.Service", b =>
                 {
                     b.HasOne("WebAplicacion.Model.Services_Orders", "ServiceOrder")
                         .WithMany("Service")
@@ -794,6 +814,17 @@ namespace WebAplicacion.Migrations
                         .IsRequired();
 
                     b.Navigation("Buys");
+                });
+
+            modelBuilder.Entity("WebAplicacion.Model.User", b =>
+                {
+                    b.HasOne("WebAplicacion.Model.Usertype", "Usertype")
+                        .WithMany()
+                        .HasForeignKey("UsertypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usertype");
                 });
 
             modelBuilder.Entity("WebAplicacion.Model.Vehicle", b =>

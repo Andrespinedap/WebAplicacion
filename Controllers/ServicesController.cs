@@ -81,7 +81,7 @@ namespace WebAplicacion.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Create(Services data)
+        public async Task<IActionResult> Create(Service data)
         {
             // Validamos que la data no sea nula
             if (data == null)
@@ -110,7 +110,7 @@ namespace WebAplicacion.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Update(int id, Services data)
+        public async Task<IActionResult> Update(int id, Service data)
         {
             if (id < 0)
                 return NotFound("id is not valid");

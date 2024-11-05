@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebAplicacion.Abstractions;
+using WebAplicacion.Interfaces;
 using WebAplicacion.Context;
 using WebAplicacion.Model;
 

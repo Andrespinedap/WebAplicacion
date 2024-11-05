@@ -1,24 +1,27 @@
-﻿using Microsoft.AspNetCore.Identity.Data;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using WebAplicacion.Interfaces;
+using WebAplicacion.DTo;
 using WebAplicacion.Model;
+using WebAplicacion.Services;
 
 namespace WebAplicacion.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [EnableCors("AllowAllOrigins")]
     public class UserController : ControllerBase
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserServices _userServices;
         private readonly IConfiguration _configuration;
 
-        public UserController(IUserRepository userRepository, IConfiguration configuration)
+        public UserController(IUserServices userServices, IConfiguration configuration)
         {
-            _userRepository = userRepository;
+            _userServices = userServices;
             _configuration = configuration;
         }
 
@@ -26,7 +29,7 @@ namespace WebAplicacion.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
         {
-            var users = await _userRepository.GetAllUsersAsync();
+            var users = await _userServices.GetAllUsersAsync();
             return Ok(users);
         }
 
@@ -35,7 +38,7 @@ namespace WebAplicacion.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<User>> GetUserById(int id)
         {
-            var user = await _userRepository.GetUserByIdAsync(id);
+            var user = await _userServices.GetUserByIdAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -43,19 +46,18 @@ namespace WebAplicacion.Controllers
             return Ok(user);
         }
 
-        [HttpPost]
-        [Route("register")]
+        [HttpPost("register")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<User>> CreateUser([FromBody] User user)
+        public async Task<ActionResult> CreateUser([FromBody] User user)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var newUser = await _userRepository.CreateUserAsync(user);
-            return CreatedAtAction(nameof(GetUserById), new { id = newUser.Id }, newUser);
+            await _userServices.CreateUserAsync(user);
+            return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
         }
 
         [HttpPut("{id}")]
@@ -69,11 +71,12 @@ namespace WebAplicacion.Controllers
                 return BadRequest(ModelState);
             }
 
-            var updatedUser = await _userRepository.UpdateUserAsync(user);
+            var updatedUser = await _userServices.GetUserByIdAsync(id);
             if (updatedUser == null)
             {
                 return NotFound();
             }
+            await _userServices.UpdateUserAsync(user);
             return NoContent();
         }
 
@@ -82,12 +85,16 @@ namespace WebAplicacion.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> SoftDeleteUser(int id)
         {
-            await _userRepository.SoftDeleteUserAsync(id);
+            var User = await _userServices.GetUserByIdAsync(id);
+            if (User == null)
+                return NotFound();
+
+            await _userServices.SoftDeleteUserAsync(id);
             return NoContent();
+
         }
-        [HttpPost]
-        [Route ("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest loginUser)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto loginUser)
         {
             // Validar los campos requeridos
             if (string.IsNullOrEmpty(loginUser.Email) || string.IsNullOrEmpty(loginUser.Password))
@@ -100,7 +107,7 @@ namespace WebAplicacion.Controllers
             }
 
             // Verificar las credenciales
-            var user = await _userRepository.GetLoginUser(loginUser.Email, loginUser.Password);
+            var user = await _userServices.LoginAsync(loginUser.Email, loginUser.Password);
 
             if (user == null)
             {

@@ -1,6 +1,6 @@
 ﻿using WebAplicacion.Model;
 
-namespace WebAplicacion.Abstractions
+namespace WebAplicacion.Interfaces
 {
     public interface IVehicleRepository
     {

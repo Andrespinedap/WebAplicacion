@@ -6,11 +6,40 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebAplicacion.Migrations
 {
     /// <inheritdoc />
-    public partial class _001 : Migration
+    public partial class _02 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "UsersHistory",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    User = table.Column<string>(type: "varchar(255)", nullable: false),
+                    Datecreate = table.Column<DateTime>(type: "datetime", nullable: false),
+                    Datemodified = table.Column<DateTime>(type: "datetime", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UsersHistory", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Usertype",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Usertype", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
@@ -23,29 +52,20 @@ namespace WebAplicacion.Migrations
                     Password = table.Column<string>(type: "varchar(255)", nullable: false),
                     PhoneNumber = table.Column<string>(type: "varchar(16)", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime", nullable: false),
-                    Modified = table.Column<string>(type: "varchar(16)", nullable: false),
-                    ModifiedBy = table.Column<string>(type: "varchar(16)", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    Modified = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UsertypeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_User", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UsersHistory",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    User = table.Column<string>(type: "varchar(255)", nullable: false),
-                    Datecreate = table.Column<DateTime>(type: "datetime", nullable: false),
-                    Modified = table.Column<string>(type: "varchar(255)", nullable: false),
-                    ModifiedBy = table.Column<string>(type: "varchar(255)", nullable: false),
-                    Datemodified = table.Column<DateTime>(type: "datetime", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UsersHistory", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_User_Usertype_UsertypeId",
+                        column: x => x.UsertypeId,
+                        principalTable: "Usertype",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -463,6 +483,11 @@ namespace WebAplicacion.Migrations
                 column: "BuysId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_User_UsertypeId",
+                table: "User",
+                column: "UsertypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Vehicle_Client_Id",
                 table: "Vehicle",
                 column: "Client_Id");
@@ -602,6 +627,9 @@ namespace WebAplicacion.Migrations
 
             migrationBuilder.DropTable(
                 name: "ServicesOrders");
+
+            migrationBuilder.DropTable(
+                name: "Usertype");
 
             migrationBuilder.DropTable(
                 name: "Suppliers");
