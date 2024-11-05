@@ -6,6 +6,7 @@ namespace WebAplicacion.Abstractions
     {
         ICollection<Payments> GetPayments();
         Task<Payments> FindAsync(int id);
+
         /// <summary>
         /// Consulta un Payments por Id
         /// </summary>
