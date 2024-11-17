@@ -21,6 +21,8 @@
         /// <summary>
         /// Calificación
         /// </summary>
+        public string Autor { get; set; }
+        public string Response { get; set; }
         public string Qualification { get; set; }
         /// <summary>
         /// Propiedad de navegación con la entidad ordenes

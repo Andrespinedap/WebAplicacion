@@ -13,14 +13,23 @@ namespace WebAplicacion.Services
         {
             _userRepository = userRepository;
         }
-
         public async Task CreateUserAsync(User user)
         {
+            if (!IsValidPassword(user.Password))
+            {
+                throw new ArgumentException("La contraseña no cumple con los requisitos.");
+            }
+
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             await _userRepository.CreateUserAsync(user);
-
         }
-
+        private bool IsValidPassword(string password)
+        {
+            // Ejemplo de validación: al menos 8 caracteres, una letra mayúscula, un número
+            return password.Length >= 8 &&
+                   password.Any(char.IsUpper) &&
+                   password.Any(char.IsDigit);
+        }
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
             return await _userRepository.GetAllUsersAsync();
@@ -68,7 +77,10 @@ namespace WebAplicacion.Services
 
         public async Task UpdateUserAsync(User user)
         {
+            user.Modified = DateTime.UtcNow.ToString();
+            user.ModifiedBy = ""; // Obtener el usuario actual, por ejemplo, del token JWT
             await _userRepository.UpdateUserAsync(user);
         }
+
     }
 }

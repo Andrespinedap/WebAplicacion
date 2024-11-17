@@ -12,8 +12,8 @@ using WebAplicacion.Context;
 namespace WebAplicacion.Migrations
 {
     [DbContext(typeof(TestDbContext))]
-    [Migration("20241105044123_02")]
-    partial class _02
+    [Migration("20241106082443_001")]
+    partial class _001
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -124,6 +124,10 @@ namespace WebAplicacion.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Autor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Client_Id")
                         .HasColumnType("int");
 
@@ -138,6 +142,10 @@ namespace WebAplicacion.Migrations
                     b.Property<string>("Qualification")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Response")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

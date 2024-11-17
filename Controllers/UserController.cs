@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -26,6 +27,7 @@ namespace WebAplicacion.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = Usertype.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
         {
@@ -53,7 +55,8 @@ namespace WebAplicacion.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                return BadRequest(new { Message = "Validation Failed", Errors = errors });
             }
 
             await _userServices.CreateUserAsync(user);
@@ -126,7 +129,8 @@ namespace WebAplicacion.Controllers
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim (JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
             new Claim("id", user.Id.ToString()),
-            new Claim("email", user.Email)
+            new Claim("email", user.Email),
+            new Claim("userType", user.Usertype.Name)
         };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key));
@@ -143,7 +147,14 @@ namespace WebAplicacion.Controllers
             {
                 success = true,
                 message = "Inicio de sesión exitoso.",
-                token = new JwtSecurityTokenHandler().WriteToken(token)
+                token = new JwtSecurityTokenHandler().WriteToken(token),
+                user = new
+                {
+                    id = user.Id,
+                    name = user.Name,
+                    email = user.Email,
+                    userType = user.Usertype.Name
+                }
             });
         }
     }

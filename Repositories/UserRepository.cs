@@ -60,7 +60,7 @@ namespace WebAplicacion.Repositories
             existingUser.Modified = user.Modified;
             existingUser.ModifiedBy = user.ModifiedBy;
 
-            existingUser.Usertype = user.Usertype;
+            existingUser.Usertype = user.Usertype;  
 
 
             _context.Entry(existingUser).State = EntityState.Modified;

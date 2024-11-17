@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
 namespace WebAplicacion.Model
 {
     public class User
@@ -15,7 +14,10 @@ namespace WebAplicacion.Model
         public required bool IsDeleted { get; set; }
         public required string Modified { get; set; }
         public required string ModifiedBy { get; set; }
-        public virtual required Usertype Usertype { get; set; }
+
+        // Relación con UserType
+        public int UserTypeId { get; set; }
+        public virtual Usertype Usertype { get; set; }
 
 
     }

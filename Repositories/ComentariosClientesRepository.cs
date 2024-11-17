@@ -45,22 +45,25 @@ namespace WebAplicacion.Repositories
         /// <returns>Retorna el id de la ComentariosClientes creada</returns>
         public async Task<bool> CreateAsync(ComentariosClientes data)
         {
-            // Verificar si los datos son válidos
+            // Verificar si los datos son nulos
             if (data == null)
             {
-                return false; // Retornar false si los datos son nulos
+                return false;
+            }
+
+            // Validar propiedades necesarias (por ejemplo, asegurarse de que el comentario no esté vacío)
+            if (string.IsNullOrWhiteSpace(data.Comment))
+            {
+                return false; // Retornar false si el comentario es inválido
             }
 
             await _context.ComentariosClientes.AddAsync(data);
 
-            // Intentar guardar los cambios y obtener el número de registros afectados
+            // Intentar guardar los cambios
             var result = await _context.SaveChangesAsync();
 
-            if (result > 0)
-            {
-                return true;
-            }
-            else { return false; }
+            // Retornar true si se guardaron los cambios, de lo contrario false
+            return result > 0;
         }
 
         /// <summary>
@@ -79,6 +82,8 @@ namespace WebAplicacion.Repositories
                     entity.Order_Id = id;
                     entity.Client_Id = id;
                     entity.Comment = data.Comment;
+                    entity.Autor = data.Autor;
+                    entity.Response = data.Response;
                     entity.Qualification = data.Qualification;
                     _context.Update(entity);
 
@@ -97,5 +102,15 @@ namespace WebAplicacion.Repositories
         {
             throw new NotImplementedException();
         }
+        public async Task<bool> AddResponseAsync(int id, string response)
+        {
+            var comentario = await _context.ComentariosClientes.FindAsync(id);
+            if (comentario == null) return false;
+
+            comentario.Response = response; // Asume que hay un campo "Response" en el modelo `ComentariosClientes`
+            _context.ComentariosClientes.Update(comentario);
+            return await _context.SaveChangesAsync() > 0;
+        }
+
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebAplicacion.Migrations
 {
     /// <inheritdoc />
-    public partial class _02 : Migration
+    public partial class _001 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -206,6 +206,8 @@ namespace WebAplicacion.Migrations
                     Order_Id = table.Column<string>(type: "varchar(16)", nullable: false),
                     Client_Id = table.Column<int>(type: "int", nullable: false),
                     Comment = table.Column<string>(type: "varchar(255)", nullable: false),
+                    Autor = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Response = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Qualification = table.Column<string>(type: "varchar(255)", nullable: false)
                 },
                 constraints: table =>
