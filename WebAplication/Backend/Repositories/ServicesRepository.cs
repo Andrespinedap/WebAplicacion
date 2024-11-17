@@ -25,7 +25,7 @@ namespace WebAplicacion.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Retorna una Services</returns>
-        public async Task<Services> FindAsync(int id)
+        public async Task<Service> FindAsync(int id)
         {
             return await _context.Services.FindAsync(id);
         }
@@ -33,7 +33,7 @@ namespace WebAplicacion.Repositories
         /// Obtiene todas las Servicess
         /// </summary>
         /// <returns>Retorna toda la data de las Servicess</returns>
-        public Task<List<Services>> AllAsync()
+        public Task<List<Service>> AllAsync()
         {
             return _context.Services.ToListAsync();
         }
@@ -43,7 +43,7 @@ namespace WebAplicacion.Repositories
         /// </summary>
         /// <param name="data"></param>
         /// <returns>Retorna el id de la Services creada</returns>
-        public async Task<bool> CreateAsync(Services data)
+        public async Task<bool> CreateAsync(Service data)
         {
             // Verificar si los datos son válidos
             if (data == null)
@@ -69,7 +69,7 @@ namespace WebAplicacion.Repositories
         /// <param name="id"></param>
         /// <param name="data"></param>
         /// <returns>Retorna true cuando la actualización es satisfactoria, de lo contrario retorna false</returns>
-        public async Task<bool> UpdateAsync(int id, Services data)
+        public async Task<bool> UpdateAsync(int id, Service data)
         {
             try
             {
@@ -92,7 +92,7 @@ namespace WebAplicacion.Repositories
                 throw new InvalidOperationException("Ha ocurrido un error: " + err);
             }
         }
-        public ICollection<Services> GetServices()
+        public ICollection<Service> GetServices()
         {
             throw new NotImplementedException();
         }

@@ -1,7 +1,9 @@
-﻿namespace WebAplicacion.Model
+﻿using System.ComponentModel.DataAnnotations;
+namespace WebAplicacion.Model
 {
     public class User
     {
+        [Key]
         public int Id { get; set; }
         public required string Name { get; set; }
         public required string LastName { get; set; }
@@ -9,7 +11,14 @@
         public required string Password { get; set; }
         public required int PhoneNumber { get; set; }
         public required DateTime Date { get; set; }
+        public required bool IsDeleted { get; set; }
         public required string Modified { get; set; }
         public required string ModifiedBy { get; set; }
+
+        // Relación con UserType
+        public int UserTypeId { get; set; }
+        public virtual Usertype Usertype { get; set; }
+
+
     }
 }

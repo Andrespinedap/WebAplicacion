@@ -51,8 +51,6 @@ namespace WebAplicacion.Repositories
 
             // Actualiza las propiedades según sea necesario
             existingUserHistory.Datecreate = userHistory.Datecreate;
-            existingUserHistory.Modified = userHistory.Modified;
-            existingUserHistory.ModifiedBy = userHistory.ModifiedBy;
             existingUserHistory.Datemodified = userHistory.Datemodified;
 
             _context.Entry(existingUserHistory).State = EntityState.Modified;

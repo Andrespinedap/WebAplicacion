@@ -38,20 +38,30 @@ namespace WebAplicacion.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> all()
         {
-            // Asigmnamos la información consultada a una variable
-            var data = await this.repository.AllAsync();
-
-            this.logger.LogDebug("Consultando todos los {registros}", data);
-
-            // Validamos que la data no se null o de otro tipo
-            if (data == null || !data.Any())
+            try
             {
-                return NotFound("No records found.");
+                // Asignamos la información consultada a una variable
+                var data = await this.repository.AllAsync();
+
+                this.logger.LogDebug("Consultando todos los {registros}", data);
+
+                // Validamos que la data no sea null o de otro tipo
+                if (data == null || !data.Any())
+                {
+                    return Ok(new List<object>()); // Devuelve una lista vacía
+                }
+
+
+                return Ok(data);
             }
-
-            return Ok(data);
-
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, "Error al consultar los registros.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno del servidor.");
+            }
         }
+
+
         /// <summary>
         /// Servicio encargado de consultar un registro
         /// </summary>
@@ -71,34 +81,63 @@ namespace WebAplicacion.Controllers
             //Retornamos la el resultado de la busqueda
             var result = await repository.FindAsync(id);
             return Ok(result);
-        }
-        /// <summary>
-        /// Servicio encargado de crear una ComentariosClientes
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns>Retorna el Id de la compañia</returns>
+        }/// <summary>
+         /// Servicio encargado de agregar una respuesta a un comentario existente
+         /// </summary>
+         /// <param name="id">ID del comentario al cual se le agregará la respuesta</param>
+         /// <param name="response">Texto de la respuesta</param>
+         /// <returns>Resultado de la operación</returns>
         [HttpPost]
+        [Route("[action]/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Create(ComentariosClientes data)
+        public async Task<IActionResult> AddResponse(int id, [FromBody] string response)
         {
-            // Validamos que la data no sea nula
-            if (data == null)
-                return NotFound("Arguments invalids");
+            if (id < 0)
+                return NotFound("Invalid comment ID");
+            if (string.IsNullOrWhiteSpace(response))
+                return NotFound("Response is not valid");
 
-            // Creamos una compañia
-            var dataCreate = await this.repository.CreateAsync(data);
+            // Llama a un método del repositorio para agregar la respuesta
+            var success = await repository.AddResponseAsync(id, response);
 
-            // Verifica si la creación fue exitosa (si la creación retorna algún valor que indique éxito)
-            if (!dataCreate)
+            if (!success)
             {
-                return NotFound("Failed to create the record");
+                return NotFound("Failed to add response to the comment");
             }
 
-            this.logger.LogDebug("Creando registro - [Data: {data}]", data);
-            return Ok(dataCreate);
+            this.logger.LogDebug("Added response to comment - [Id: {Id}, Response: {Response}]", id, response);
+            return Ok(success);
         }
+        [HttpPost]
+        [Route("create")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Create([FromBody] ComentariosClientes comentario)
+        {
+            if (comentario == null)
+                return BadRequest("Comentario no válido");
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState); // Esto devolverá los errores de validación al cliente
+            }
+
+            var success = await repository.CreateAsync(comentario);
+
+            if (!success)
+            {
+                logger.LogError("Error al crear el comentario: {Comentario}", comentario);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error al crear el comentario");
+            }
+
+            logger.LogInformation("Comentario creado exitosamente: {Comentario}", comentario);
+            return Ok(success);
+        }
+
+
         /// <summary>
         /// Servicio encargado de la actualización de un registro
         /// </summary>

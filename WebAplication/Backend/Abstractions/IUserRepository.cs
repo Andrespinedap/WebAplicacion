@@ -9,6 +9,6 @@ namespace WebAplicacion.Interfaces
         Task<User> CreateUserAsync(User user);
         Task<User> UpdateUserAsync(User user);
         Task SoftDeleteUserAsync(int id);
-        Task<User>GetLoginUser(string email, string password);
+        Task<User>GetLoginUser(string email);
     }
 }

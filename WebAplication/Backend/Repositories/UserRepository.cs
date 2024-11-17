@@ -56,19 +56,27 @@ namespace WebAplicacion.Repositories
             existingUser.Password = user.Password;
             existingUser.PhoneNumber = user.PhoneNumber;
             existingUser.Date = user.Date;
+            existingUser.IsDeleted = user.IsDeleted;
             existingUser.Modified = user.Modified;
             existingUser.ModifiedBy = user.ModifiedBy;
 
+            existingUser.Usertype = user.Usertype;  
+
+
             _context.Entry(existingUser).State = EntityState.Modified;
+
             await _context.SaveChangesAsync();
 
             return existingUser;
         }
 
-        public async Task<User> GetLoginUser(string email, string password)
+        public async Task<User> GetLoginUser(string email)
         {
             return await _context.Users
-            .FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
+                .AsNoTracking()
+                .Include(u => u.Usertype) // Incluir tipo de usuario si es necesario
+                .FirstOrDefaultAsync(s => s.Email == email && !s.IsDeleted);
+
         }
     }
 }

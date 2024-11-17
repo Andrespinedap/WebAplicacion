@@ -12,8 +12,8 @@ using WebAplicacion.Context;
 namespace WebAplicacion.Migrations
 {
     [DbContext(typeof(TestDbContext))]
-    [Migration("20241106082443_001")]
-    partial class _001
+    [Migration("20241117012530_MigracionFinal")]
+    partial class MigracionFinal
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -503,12 +503,12 @@ namespace WebAplicacion.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(16)");
 
-                    b.Property<int>("UsertypeId")
+                    b.Property<int>("UserTypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UsertypeId");
+                    b.HasIndex("UserTypeId");
 
                     b.ToTable("User", (string)null);
                 });
@@ -831,7 +831,7 @@ namespace WebAplicacion.Migrations
                 {
                     b.HasOne("WebAplicacion.Model.Usertype", "Usertype")
                         .WithMany()
-                        .HasForeignKey("UsertypeId")
+                        .HasForeignKey("UserTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

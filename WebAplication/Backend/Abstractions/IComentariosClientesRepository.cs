@@ -29,5 +29,7 @@ namespace WebAplicacion.Abstractions
         /// <param name="id"></param>
         /// <param name="data"></param>
         /// <returns>Retorna un true si la información se actualizo correctamente</returns>
+        // Otros métodos ya existentes
+        Task<bool> AddResponseAsync(int id, string response);
     }
 }

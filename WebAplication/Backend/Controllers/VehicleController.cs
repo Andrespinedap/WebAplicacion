@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebAplicacion.Abstractions;
+using WebAplicacion.Interfaces;
 using WebAplicacion.Model;
 
 namespace WebAplicacion.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class VehicleController : ControllerBase
     {
         private readonly IVehicleRepository _vehicleRepository;

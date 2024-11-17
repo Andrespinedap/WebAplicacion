@@ -8,6 +8,6 @@ namespace WebAplicacion.Model
         public int Amount { get; set; }
         public Order Order { get; set; }
         //public Services Services { get; set; } }
-    public ICollection<Services> Service { get; } = new List<Services>();
+    public ICollection<Service> Service { get; } = new List<Service>();
 }
 }
